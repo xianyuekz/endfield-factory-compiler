@@ -9,6 +9,8 @@ unbuildable plan. It is intentionally narrower than a feature wish list.
   and output rates (`v0.2.1`).
 - [ ] Accumulate same-item flow on shared route tiles and reject aggregate
   throughput above tile capacity.
+- [ ] Promote the HC Valley Battery example from a research fixture into a
+  stricter acceptance test once official/redistributable data is available.
 
 ## P1 — physical-model gaps
 
@@ -29,6 +31,8 @@ unbuildable plan. It is intentionally narrower than a feature wish list.
 
 ## P3 — adoption gaps
 
+- [x] Add a first non-toy research fixture that compiles HC Valley Battery
+  placement/routing without requiring official game assets (`v0.4.2`).
 - [ ] Add a community-maintained, legally redistributable real-data pack.
 - [ ] Add a local visual project editor without introducing an online service.
 - [ ] Add a blueprint adapter only if a documented and permitted format becomes

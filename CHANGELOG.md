@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here.
 
+## 0.4.2
+
+- add a Valley IV community-data research region pack;
+- add an HC Valley Battery project that compiles into a clean placement and
+  routed physical plan;
+- add checked-in HC Valley Battery SVG/JSON/Markdown artifacts for easy
+  repository inspection;
+- document the current boundary between generated physical plans and official
+  in-game blueprint-code export;
+- add regression coverage for the HC Valley Battery recipe chain.
+
 ## 0.4.1
 
 - apply Rust formatting required by the native CI quality gate.

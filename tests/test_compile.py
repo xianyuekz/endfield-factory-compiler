@@ -14,6 +14,7 @@ from endfield_factory_compiler.report import render_markdown
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / "examples" / "control-core.json"
+HC_VALLEY_BATTERY_PROJECT = ROOT / "examples" / "hc-valley-battery.json"
 
 
 class CompilationTests(unittest.TestCase):
@@ -55,6 +56,60 @@ class CompilationTests(unittest.TestCase):
         self.assertIn("**PASS**", report)
         self.assertIn("## Production", report)
         self.assertIn("Control Core", report)
+
+    def test_hc_valley_battery_compiles_cleanly(self):
+        project = load_project(HC_VALLEY_BATTERY_PROJECT)
+        pack = load_region_pack(project.region_pack_path)
+        result = compile_project(project, pack)
+
+        errors = [
+            diagnostic
+            for diagnostic in result.diagnostics
+            if diagnostic.severity == "error"
+        ]
+        self.assertEqual(errors, [])
+        self.assertEqual(result.synthesis.targets, {"hc_valley_battery": 6.0})
+        self.assertEqual(sum(node.machine_count for node in result.synthesis.nodes), 28)
+        self.assertTrue(all(route.routed for route in result.layout.routes))
+        self.assertLessEqual(
+            result.synthesis.total_power,
+            project.constraints.max_power,
+        )
+        self.assertLessEqual(
+            result.metrics.device_count,
+            project.constraints.max_devices,
+        )
+        self.assertLessEqual(
+            result.metrics.route_tiles,
+            project.constraints.max_route_tiles,
+        )
+
+        machines_by_recipe = {
+            node.recipe_id: node.machine_count for node in result.synthesis.nodes
+        }
+        self.assertEqual(machines_by_recipe["package_hc_valley_battery"], 1)
+        self.assertEqual(machines_by_recipe["fit_steel_part"], 2)
+        self.assertEqual(machines_by_recipe["grind_dense_originium_powder"], 3)
+
+        plan = result.to_dict()
+        self.assertEqual(plan["region"]["id"], "valley-iv-research")
+        self.assertEqual(plan["metrics"]["device_count"], 28)
+        self.assertGreater(plan["metrics"]["route_tiles"], 0)
+
+        svg = render_svg(
+            project,
+            pack,
+            result.synthesis,
+            result.layout,
+            result.metrics,
+            result.diagnostics,
+        )
+        self.assertIn("6 HC Valley Batteries per Minute", svg)
+        self.assertIn("DRC CLEAN", svg)
+
+        report = render_markdown(result)
+        self.assertIn("**PASS**", report)
+        self.assertIn("HC Valley Battery", report)
 
     def test_project_constraints_are_checked(self):
         project = load_project(PROJECT)

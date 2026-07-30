@@ -1,0 +1,236 @@
+{
+  "$schema": "../../schemas/region-pack.schema.json",
+  "schema_version": 1,
+  "id": "valley-iv-research",
+  "name": "Valley IV Research Pack (community data)",
+  "version": "0.1.0",
+  "grid": {
+    "width": 160,
+    "height": 64,
+    "max_power": 1800,
+    "obstacles": [
+      {
+        "x": 76,
+        "y": 28,
+        "width": 6,
+        "height": 8
+      },
+      {
+        "x": 120,
+        "y": 8,
+        "width": 5,
+        "height": 6
+      }
+    ]
+  },
+  "logistics": {
+    "tile_capacity_per_minute": 30,
+    "allow_crossings": true,
+    "crossing_penalty": 10,
+    "bend_penalty": 0.35
+  },
+  "items": {
+    "originium_ore": {
+      "name": "源矿 / Originium Ore"
+    },
+    "ferrium_ore": {
+      "name": "蓝铁矿 / Ferrium Ore"
+    },
+    "sandleaf_seed": {
+      "name": "砂叶种子 / Sandleaf Seed"
+    },
+    "sandleaf": {
+      "name": "砂叶 / Sandleaf"
+    },
+    "sandleaf_powder": {
+      "name": "砂叶粉末 / Sandleaf Powder"
+    },
+    "originium_powder": {
+      "name": "源石粉末 / Originium Powder"
+    },
+    "dense_originium_powder": {
+      "name": "致密源石粉末 / Dense Originium Powder"
+    },
+    "ferrium": {
+      "name": "蓝铁块 / Ferrium"
+    },
+    "ferrium_powder": {
+      "name": "蓝铁粉末 / Ferrium Powder"
+    },
+    "dense_ferrium_powder": {
+      "name": "致密蓝铁粉末 / Dense Ferrium Powder"
+    },
+    "steel": {
+      "name": "钢块 / Steel"
+    },
+    "steel_part": {
+      "name": "钢制零件 / Steel Part"
+    },
+    "hc_valley_battery": {
+      "name": "高容谷地电池 / HC Valley Battery"
+    }
+  },
+  "devices": {
+    "planting_unit": {
+      "name": "种植机 / Planting Unit",
+      "width": 4,
+      "height": 4,
+      "power": 12
+    },
+    "shredding_unit": {
+      "name": "粉碎机 / Shredding Unit",
+      "width": 4,
+      "height": 3,
+      "power": 18
+    },
+    "grinding_unit": {
+      "name": "研磨机 / Grinding Unit",
+      "width": 5,
+      "height": 3,
+      "power": 24
+    },
+    "refining_unit": {
+      "name": "精炼炉 / Refining Unit",
+      "width": 4,
+      "height": 4,
+      "power": 28
+    },
+    "fitting_unit": {
+      "name": "配件机 / Fitting Unit",
+      "width": 4,
+      "height": 3,
+      "power": 20
+    },
+    "packaging_unit": {
+      "name": "封装机 / Packaging Unit",
+      "width": 5,
+      "height": 4,
+      "power": 36
+    }
+  },
+  "recipes": {
+    "plant_sandleaf": {
+      "name": "砂叶",
+      "device": "planting_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "sandleaf_seed": 1
+      },
+      "output": {
+        "item": "sandleaf",
+        "amount": 1
+      }
+    },
+    "shred_sandleaf_powder": {
+      "name": "砂叶粉末",
+      "device": "shredding_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "sandleaf": 1
+      },
+      "output": {
+        "item": "sandleaf_powder",
+        "amount": 3
+      }
+    },
+    "shred_originium_powder": {
+      "name": "源石粉末",
+      "device": "shredding_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "originium_ore": 1
+      },
+      "output": {
+        "item": "originium_powder",
+        "amount": 1
+      }
+    },
+    "grind_dense_originium_powder": {
+      "name": "致密源石粉末",
+      "device": "grinding_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "originium_powder": 2,
+        "sandleaf_powder": 1
+      },
+      "output": {
+        "item": "dense_originium_powder",
+        "amount": 1
+      }
+    },
+    "refine_ferrium": {
+      "name": "蓝铁块",
+      "device": "refining_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "ferrium_ore": 1
+      },
+      "output": {
+        "item": "ferrium",
+        "amount": 1
+      }
+    },
+    "shred_ferrium_powder": {
+      "name": "蓝铁粉末",
+      "device": "shredding_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "ferrium": 1
+      },
+      "output": {
+        "item": "ferrium_powder",
+        "amount": 1
+      }
+    },
+    "grind_dense_ferrium_powder": {
+      "name": "致密蓝铁粉末",
+      "device": "grinding_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "ferrium_powder": 2,
+        "sandleaf_powder": 1
+      },
+      "output": {
+        "item": "dense_ferrium_powder",
+        "amount": 1
+      }
+    },
+    "refine_steel": {
+      "name": "钢块",
+      "device": "refining_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "dense_ferrium_powder": 1
+      },
+      "output": {
+        "item": "steel",
+        "amount": 1
+      }
+    },
+    "fit_steel_part": {
+      "name": "钢制零件",
+      "device": "fitting_unit",
+      "cycle_seconds": 2,
+      "inputs": {
+        "steel": 1
+      },
+      "output": {
+        "item": "steel_part",
+        "amount": 1
+      }
+    },
+    "package_hc_valley_battery": {
+      "name": "高容谷地电池",
+      "device": "packaging_unit",
+      "cycle_seconds": 10,
+      "inputs": {
+        "steel_part": 10,
+        "dense_originium_powder": 15
+      },
+      "output": {
+        "item": "hc_valley_battery",
+        "amount": 1
+      }
+    }
+  }
+}

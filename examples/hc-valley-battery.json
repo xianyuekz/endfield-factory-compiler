@@ -1,0 +1,14 @@
+{
+  "$schema": "../schemas/project.schema.json",
+  "schema_version": 1,
+  "name": "6 HC Valley Batteries per Minute",
+  "region_pack": "../region-packs/valley-iv-research/region.json",
+  "targets": {
+    "hc_valley_battery": 6
+  },
+  "constraints": {
+    "max_power": 900,
+    "max_devices": 36,
+    "max_route_tiles": 1200
+  }
+}

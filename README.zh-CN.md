@@ -9,6 +9,7 @@
 > DRC。
 
 ![自动生成的示例布局](docs/assets/demo/layout.svg)
+![自动生成的高容谷地电池布局](docs/assets/hc-valley-battery/layout.svg)
 
 这个仓库是一个小而完整的概念验证，不是对“做出完整游戏工具”的承诺。它尝试
 把工厂规划问题建模为类似 FPGA 的物理设计流程：
@@ -23,9 +24,12 @@
   → SVG + JSON + Markdown 报告
 ```
 
-当前示例会把“每分钟 8 个控制核心”编译为 13 台设备、25 条物流路径，并通过
-DRC。示例全部使用虚构数据，仓库不会分发游戏素材，也不会把未经核实的数据
-描述成官方数值。
+玩具示例会把“每分钟 8 个控制核心”编译为 13 台设备、25 条物流路径，并通过
+DRC。仓库还包含第一个更接近真实终末地目标的研究示例：每分钟 6 个高容谷地
+电池，并生成可审计的设备摆放与物流布线方案。
+
+仓库不会分发官方游戏数据、素材或蓝图字符串。接近真实的示例会标记为社区资料
+研究包，而不是官方权威导出。
 
 ## 快速体验
 
@@ -40,6 +44,10 @@ python -m pip install -e .
 efc validate-pack region-packs/demo-valley/region.json
 efc validate-project examples/control-core.json
 efc compile examples/control-core.json --out build/demo
+
+efc validate-pack region-packs/valley-iv-research/region.json
+efc validate-project examples/hc-valley-battery.json
+efc compile examples/hc-valley-battery.json --out build/hc-valley-battery
 ```
 
 用浏览器打开 `build/demo/layout.svg` 即可查看布局；机器可读的物理设计结果位于
@@ -63,6 +71,10 @@ python -m unittest discover -s tests -v
 工程还可以约束最大功耗、设备数量和物流格数量，详见
 [工程文件规范](docs/PROJECTS.md)。
 
+第一个非玩具示例见[高容谷地电池](docs/HC_VALLEY_BATTERY.md)。它目前会输出
+SVG、JSON 物理计划和 Markdown 报告；官方游戏蓝图代码导出会保留在适配器边界
+之后，等格式足够明确并且允许支持后再做。
+
 ## 当前边界
 
 已经实现：
@@ -78,6 +90,7 @@ python -m unittest discover -s tests -v
 - 占地率、路线长度、转弯和交叉等物理设计指标
 - 支持编辑器校验和自动补全的 JSON Schema
 - 可替换的路由后端以及 CPU、搜索规模和超时遥测
+- 社区资料高容谷地电池研究示例
 - 零依赖 JSON、SVG 和 Markdown 输出
 
 暂不实现：

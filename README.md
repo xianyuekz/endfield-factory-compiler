@@ -9,6 +9,7 @@
 > synthesis, technology mapping, placement, logistics routing and DRC.
 
 ![Generated demo layout](docs/assets/demo/layout.svg)
+![Generated HC Valley Battery layout](docs/assets/hc-valley-battery/layout.svg)
 
 This repository is a small, working proof of concept—not a promise to build a
 full game tool. It explores what happens when factory planning is treated like
@@ -24,10 +25,14 @@ production targets
   -> SVG + JSON + Markdown report
 ```
 
-The demo compiles a target of 8 control cores per minute into 13 devices and 25
-routes with a clean DRC report. It uses fictional data so that the repository
-does not redistribute game assets or claim that unverified values are
-authoritative.
+The toy demo compiles a target of 8 control cores per minute into 13 devices
+and 25 routes with a clean DRC report. The repository also includes a first
+research fixture for a real-looking Endfield target: 6 HC Valley Batteries per
+minute, compiled into an inspectable placement/routing plan.
+
+Official game data and blueprint strings are not redistributed here. Real-ish
+examples are marked as community-data research fixtures rather than
+authoritative exports.
 
 ## Try it
 
@@ -42,6 +47,10 @@ python -m pip install -e .
 efc validate-pack region-packs/demo-valley/region.json
 efc validate-project examples/control-core.json
 efc compile examples/control-core.json --out build/demo
+
+efc validate-pack region-packs/valley-iv-research/region.json
+efc validate-project examples/hc-valley-battery.json
+efc compile examples/hc-valley-battery.json --out build/hc-valley-battery
 ```
 
 Open `build/demo/layout.svg` in a browser. The machine-readable physical plan
@@ -67,6 +76,12 @@ See [the region-pack format](docs/REGION_PACKS.md) and the fictional
 Projects may also set hard limits for power, device count and unique logistics
 tiles. See [the project format](docs/PROJECTS.md).
 
+The first non-toy example is documented in
+[HC Valley Battery](docs/HC_VALLEY_BATTERY.md). It currently emits an SVG,
+JSON physical plan and Markdown report; official in-game blueprint-code export
+is intentionally left behind an adapter boundary until the format is documented
+and permitted to support.
+
 ## Current scope
 
 Implemented:
@@ -83,6 +98,7 @@ Implemented:
 - JSON Schema files for editor validation and autocomplete
 - replaceable routing backends with CPU, search and timeout telemetry
 - standalone Rust route-core prototype for native A* hot-loop work
+- community-data HC Valley Battery research example
 - dependency-free JSON, SVG and Markdown output
 
 Deliberately not implemented:

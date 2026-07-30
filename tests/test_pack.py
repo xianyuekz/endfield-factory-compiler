@@ -8,6 +8,7 @@ from endfield_factory_compiler.pack import PackError, load_region_pack
 
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "region-packs" / "demo-valley" / "region.json"
+VALLEY_RESEARCH_PACK = ROOT / "region-packs" / "valley-iv-research" / "region.json"
 
 
 class RegionPackTests(unittest.TestCase):
@@ -20,6 +21,23 @@ class RegionPackTests(unittest.TestCase):
         self.assertTrue(pack.logistics.allow_crossings)
         self.assertEqual(pack.logistics.crossing_penalty, 8)
         self.assertEqual(pack.logistics.bend_penalty, 0.4)
+
+    def test_valley_research_pack_loads(self):
+        pack = load_region_pack(VALLEY_RESEARCH_PACK)
+        self.assertEqual(pack.id, "valley-iv-research")
+        self.assertIn("hc_valley_battery", pack.items)
+        self.assertEqual(len(pack.devices), 6)
+        self.assertEqual(len(pack.recipes), 10)
+
+        battery_recipe = pack.recipe_by_output()["hc_valley_battery"]
+        self.assertEqual(battery_recipe.cycle_seconds, 10)
+        self.assertEqual(
+            battery_recipe.inputs,
+            {
+                "steel_part": 10.0,
+                "dense_originium_powder": 15.0,
+            },
+        )
 
     def test_missing_pack_is_reported(self):
         with self.assertRaises(PackError):

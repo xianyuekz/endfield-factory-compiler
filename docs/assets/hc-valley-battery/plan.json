@@ -1,0 +1,4463 @@
+{
+  "format": "endfield-factory-compiler-plan",
+  "format_version": 1,
+  "execution": {
+    "jobs": 1,
+    "deterministic": true,
+    "seed": 0,
+    "time_limit_seconds": null
+  },
+  "project": {
+    "name": "6 HC Valley Batteries per Minute",
+    "targets": {
+      "hc_valley_battery": 6.0
+    },
+    "constraints": {
+      "max_power": 900.0,
+      "max_devices": 36,
+      "max_route_tiles": 1200
+    }
+  },
+  "region": {
+    "id": "valley-iv-research",
+    "name": "Valley IV Research Pack (community data)",
+    "version": "0.1.0"
+  },
+  "synthesis": {
+    "targets": {
+      "hc_valley_battery": 6.0
+    },
+    "nodes": [
+      {
+        "recipe_id": "plant_sandleaf",
+        "item": "sandleaf",
+        "required_rate": 50.0,
+        "machine_count": 2,
+        "capacity_rate": 60.0,
+        "depth": 1,
+        "input_rates": {
+          "sandleaf_seed": 50.0
+        },
+        "power": 24.0
+      },
+      {
+        "recipe_id": "refine_ferrium",
+        "item": "ferrium",
+        "required_rate": 120.0,
+        "machine_count": 4,
+        "capacity_rate": 120.0,
+        "depth": 1,
+        "input_rates": {
+          "ferrium_ore": 120.0
+        },
+        "power": 112.0
+      },
+      {
+        "recipe_id": "shred_originium_powder",
+        "item": "originium_powder",
+        "required_rate": 180.0,
+        "machine_count": 6,
+        "capacity_rate": 180.0,
+        "depth": 1,
+        "input_rates": {
+          "originium_ore": 180.0
+        },
+        "power": 108.0
+      },
+      {
+        "recipe_id": "shred_ferrium_powder",
+        "item": "ferrium_powder",
+        "required_rate": 120.0,
+        "machine_count": 4,
+        "capacity_rate": 120.0,
+        "depth": 2,
+        "input_rates": {
+          "ferrium": 120.0
+        },
+        "power": 72.0
+      },
+      {
+        "recipe_id": "shred_sandleaf_powder",
+        "item": "sandleaf_powder",
+        "required_rate": 150.0,
+        "machine_count": 2,
+        "capacity_rate": 180.0,
+        "depth": 2,
+        "input_rates": {
+          "sandleaf": 50.0
+        },
+        "power": 36.0
+      },
+      {
+        "recipe_id": "grind_dense_ferrium_powder",
+        "item": "dense_ferrium_powder",
+        "required_rate": 60.0,
+        "machine_count": 2,
+        "capacity_rate": 60.0,
+        "depth": 3,
+        "input_rates": {
+          "ferrium_powder": 120.0,
+          "sandleaf_powder": 60.0
+        },
+        "power": 48.0
+      },
+      {
+        "recipe_id": "grind_dense_originium_powder",
+        "item": "dense_originium_powder",
+        "required_rate": 90.0,
+        "machine_count": 3,
+        "capacity_rate": 90.0,
+        "depth": 3,
+        "input_rates": {
+          "originium_powder": 180.0,
+          "sandleaf_powder": 90.0
+        },
+        "power": 72.0
+      },
+      {
+        "recipe_id": "refine_steel",
+        "item": "steel",
+        "required_rate": 60.0,
+        "machine_count": 2,
+        "capacity_rate": 60.0,
+        "depth": 4,
+        "input_rates": {
+          "dense_ferrium_powder": 60.0
+        },
+        "power": 56.0
+      },
+      {
+        "recipe_id": "fit_steel_part",
+        "item": "steel_part",
+        "required_rate": 60.0,
+        "machine_count": 2,
+        "capacity_rate": 60.0,
+        "depth": 5,
+        "input_rates": {
+          "steel": 60.0
+        },
+        "power": 40.0
+      },
+      {
+        "recipe_id": "package_hc_valley_battery",
+        "item": "hc_valley_battery",
+        "required_rate": 6.0,
+        "machine_count": 1,
+        "capacity_rate": 6.0,
+        "depth": 6,
+        "input_rates": {
+          "steel_part": 60.0,
+          "dense_originium_powder": 90.0
+        },
+        "power": 36.0
+      }
+    ],
+    "source_rates": {
+      "ferrium_ore": 120.0,
+      "originium_ore": 180.0,
+      "sandleaf_seed": 50.0
+    },
+    "total_power": 604.0
+  },
+  "layout": {
+    "devices": [
+      {
+        "id": "plant_sandleaf-1",
+        "recipe_id": "plant_sandleaf",
+        "device_id": "planting_unit",
+        "output_item": "sandleaf",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 2,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "sandleaf_seed"
+        ]
+      },
+      {
+        "id": "plant_sandleaf-2",
+        "recipe_id": "plant_sandleaf",
+        "device_id": "planting_unit",
+        "output_item": "sandleaf",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 8,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "sandleaf_seed"
+        ]
+      },
+      {
+        "id": "refine_ferrium-1",
+        "recipe_id": "refine_ferrium",
+        "device_id": "refining_unit",
+        "output_item": "ferrium",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 14,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "ferrium_ore"
+        ]
+      },
+      {
+        "id": "refine_ferrium-2",
+        "recipe_id": "refine_ferrium",
+        "device_id": "refining_unit",
+        "output_item": "ferrium",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 20,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "ferrium_ore"
+        ]
+      },
+      {
+        "id": "refine_ferrium-3",
+        "recipe_id": "refine_ferrium",
+        "device_id": "refining_unit",
+        "output_item": "ferrium",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 26,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "ferrium_ore"
+        ]
+      },
+      {
+        "id": "refine_ferrium-4",
+        "recipe_id": "refine_ferrium",
+        "device_id": "refining_unit",
+        "output_item": "ferrium",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 32,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "ferrium_ore"
+        ]
+      },
+      {
+        "id": "shred_originium_powder-1",
+        "recipe_id": "shred_originium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "originium_powder",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 38,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "originium_ore"
+        ]
+      },
+      {
+        "id": "shred_originium_powder-2",
+        "recipe_id": "shred_originium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "originium_powder",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 43,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "originium_ore"
+        ]
+      },
+      {
+        "id": "shred_originium_powder-3",
+        "recipe_id": "shred_originium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "originium_powder",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 48,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "originium_ore"
+        ]
+      },
+      {
+        "id": "shred_originium_powder-4",
+        "recipe_id": "shred_originium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "originium_powder",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 53,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "originium_ore"
+        ]
+      },
+      {
+        "id": "shred_originium_powder-5",
+        "recipe_id": "shred_originium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "originium_powder",
+        "depth": 1,
+        "rect": {
+          "x": 3,
+          "y": 58,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "originium_ore"
+        ]
+      },
+      {
+        "id": "shred_originium_powder-6",
+        "recipe_id": "shred_originium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "originium_powder",
+        "depth": 1,
+        "rect": {
+          "x": 10,
+          "y": 2,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "originium_ore"
+        ]
+      },
+      {
+        "id": "shred_ferrium_powder-1",
+        "recipe_id": "shred_ferrium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "ferrium_powder",
+        "depth": 2,
+        "rect": {
+          "x": 19,
+          "y": 2,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "ferrium"
+        ]
+      },
+      {
+        "id": "shred_ferrium_powder-2",
+        "recipe_id": "shred_ferrium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "ferrium_powder",
+        "depth": 2,
+        "rect": {
+          "x": 19,
+          "y": 7,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "ferrium"
+        ]
+      },
+      {
+        "id": "shred_ferrium_powder-3",
+        "recipe_id": "shred_ferrium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "ferrium_powder",
+        "depth": 2,
+        "rect": {
+          "x": 19,
+          "y": 12,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "ferrium"
+        ]
+      },
+      {
+        "id": "shred_ferrium_powder-4",
+        "recipe_id": "shred_ferrium_powder",
+        "device_id": "shredding_unit",
+        "output_item": "ferrium_powder",
+        "depth": 2,
+        "rect": {
+          "x": 19,
+          "y": 17,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "ferrium"
+        ]
+      },
+      {
+        "id": "shred_sandleaf_powder-1",
+        "recipe_id": "shred_sandleaf_powder",
+        "device_id": "shredding_unit",
+        "output_item": "sandleaf_powder",
+        "depth": 2,
+        "rect": {
+          "x": 19,
+          "y": 22,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "sandleaf"
+        ]
+      },
+      {
+        "id": "shred_sandleaf_powder-2",
+        "recipe_id": "shred_sandleaf_powder",
+        "device_id": "shredding_unit",
+        "output_item": "sandleaf_powder",
+        "depth": 2,
+        "rect": {
+          "x": 19,
+          "y": 27,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "sandleaf"
+        ]
+      },
+      {
+        "id": "grind_dense_ferrium_powder-1",
+        "recipe_id": "grind_dense_ferrium_powder",
+        "device_id": "grinding_unit",
+        "output_item": "dense_ferrium_powder",
+        "depth": 3,
+        "rect": {
+          "x": 28,
+          "y": 2,
+          "width": 5,
+          "height": 3
+        },
+        "input_items": [
+          "ferrium_powder",
+          "sandleaf_powder"
+        ]
+      },
+      {
+        "id": "grind_dense_ferrium_powder-2",
+        "recipe_id": "grind_dense_ferrium_powder",
+        "device_id": "grinding_unit",
+        "output_item": "dense_ferrium_powder",
+        "depth": 3,
+        "rect": {
+          "x": 28,
+          "y": 7,
+          "width": 5,
+          "height": 3
+        },
+        "input_items": [
+          "ferrium_powder",
+          "sandleaf_powder"
+        ]
+      },
+      {
+        "id": "grind_dense_originium_powder-1",
+        "recipe_id": "grind_dense_originium_powder",
+        "device_id": "grinding_unit",
+        "output_item": "dense_originium_powder",
+        "depth": 3,
+        "rect": {
+          "x": 28,
+          "y": 12,
+          "width": 5,
+          "height": 3
+        },
+        "input_items": [
+          "originium_powder",
+          "sandleaf_powder"
+        ]
+      },
+      {
+        "id": "grind_dense_originium_powder-2",
+        "recipe_id": "grind_dense_originium_powder",
+        "device_id": "grinding_unit",
+        "output_item": "dense_originium_powder",
+        "depth": 3,
+        "rect": {
+          "x": 28,
+          "y": 17,
+          "width": 5,
+          "height": 3
+        },
+        "input_items": [
+          "originium_powder",
+          "sandleaf_powder"
+        ]
+      },
+      {
+        "id": "grind_dense_originium_powder-3",
+        "recipe_id": "grind_dense_originium_powder",
+        "device_id": "grinding_unit",
+        "output_item": "dense_originium_powder",
+        "depth": 3,
+        "rect": {
+          "x": 28,
+          "y": 22,
+          "width": 5,
+          "height": 3
+        },
+        "input_items": [
+          "originium_powder",
+          "sandleaf_powder"
+        ]
+      },
+      {
+        "id": "refine_steel-1",
+        "recipe_id": "refine_steel",
+        "device_id": "refining_unit",
+        "output_item": "steel",
+        "depth": 4,
+        "rect": {
+          "x": 38,
+          "y": 2,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "dense_ferrium_powder"
+        ]
+      },
+      {
+        "id": "refine_steel-2",
+        "recipe_id": "refine_steel",
+        "device_id": "refining_unit",
+        "output_item": "steel",
+        "depth": 4,
+        "rect": {
+          "x": 38,
+          "y": 8,
+          "width": 4,
+          "height": 4
+        },
+        "input_items": [
+          "dense_ferrium_powder"
+        ]
+      },
+      {
+        "id": "fit_steel_part-1",
+        "recipe_id": "fit_steel_part",
+        "device_id": "fitting_unit",
+        "output_item": "steel_part",
+        "depth": 5,
+        "rect": {
+          "x": 47,
+          "y": 2,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "steel"
+        ]
+      },
+      {
+        "id": "fit_steel_part-2",
+        "recipe_id": "fit_steel_part",
+        "device_id": "fitting_unit",
+        "output_item": "steel_part",
+        "depth": 5,
+        "rect": {
+          "x": 47,
+          "y": 7,
+          "width": 4,
+          "height": 3
+        },
+        "input_items": [
+          "steel"
+        ]
+      },
+      {
+        "id": "package_hc_valley_battery-1",
+        "recipe_id": "package_hc_valley_battery",
+        "device_id": "packaging_unit",
+        "output_item": "hc_valley_battery",
+        "depth": 6,
+        "rect": {
+          "x": 56,
+          "y": 2,
+          "width": 5,
+          "height": 4
+        },
+        "input_items": [
+          "steel_part",
+          "dense_originium_powder"
+        ]
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "item": "sandleaf_seed",
+        "source": "external:sandleaf_seed",
+        "sink": "plant_sandleaf-1",
+        "required_rate": 25.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-2",
+        "item": "sandleaf_seed",
+        "source": "external:sandleaf_seed",
+        "sink": "plant_sandleaf-2",
+        "required_rate": 25.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            8
+          ],
+          [
+            1,
+            8
+          ],
+          [
+            2,
+            8
+          ]
+        ]
+      },
+      {
+        "id": "route-3",
+        "item": "ferrium_ore",
+        "source": "external:ferrium_ore",
+        "sink": "refine_ferrium-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            14
+          ],
+          [
+            1,
+            14
+          ],
+          [
+            2,
+            14
+          ]
+        ]
+      },
+      {
+        "id": "route-4",
+        "item": "ferrium_ore",
+        "source": "external:ferrium_ore",
+        "sink": "refine_ferrium-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            20
+          ],
+          [
+            1,
+            20
+          ],
+          [
+            2,
+            20
+          ]
+        ]
+      },
+      {
+        "id": "route-5",
+        "item": "ferrium_ore",
+        "source": "external:ferrium_ore",
+        "sink": "refine_ferrium-3",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            26
+          ],
+          [
+            1,
+            26
+          ],
+          [
+            2,
+            26
+          ]
+        ]
+      },
+      {
+        "id": "route-6",
+        "item": "ferrium_ore",
+        "source": "external:ferrium_ore",
+        "sink": "refine_ferrium-4",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            32
+          ],
+          [
+            1,
+            32
+          ],
+          [
+            2,
+            32
+          ]
+        ]
+      },
+      {
+        "id": "route-7",
+        "item": "originium_ore",
+        "source": "external:originium_ore",
+        "sink": "shred_originium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            38
+          ],
+          [
+            1,
+            38
+          ],
+          [
+            2,
+            38
+          ]
+        ]
+      },
+      {
+        "id": "route-8",
+        "item": "originium_ore",
+        "source": "external:originium_ore",
+        "sink": "shred_originium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            43
+          ],
+          [
+            1,
+            43
+          ],
+          [
+            2,
+            43
+          ]
+        ]
+      },
+      {
+        "id": "route-9",
+        "item": "originium_ore",
+        "source": "external:originium_ore",
+        "sink": "shred_originium_powder-3",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            48
+          ],
+          [
+            1,
+            48
+          ],
+          [
+            2,
+            48
+          ]
+        ]
+      },
+      {
+        "id": "route-10",
+        "item": "originium_ore",
+        "source": "external:originium_ore",
+        "sink": "shred_originium_powder-4",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            53
+          ],
+          [
+            1,
+            53
+          ],
+          [
+            2,
+            53
+          ]
+        ]
+      },
+      {
+        "id": "route-11",
+        "item": "originium_ore",
+        "source": "external:originium_ore",
+        "sink": "shred_originium_powder-5",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            58
+          ],
+          [
+            1,
+            58
+          ],
+          [
+            2,
+            58
+          ]
+        ]
+      },
+      {
+        "id": "route-12",
+        "item": "originium_ore",
+        "source": "external:originium_ore",
+        "sink": "shred_originium_powder-6",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            7,
+            1
+          ],
+          [
+            8,
+            1
+          ],
+          [
+            9,
+            1
+          ],
+          [
+            9,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-13",
+        "item": "ferrium",
+        "source": "refine_ferrium-1",
+        "sink": "shred_ferrium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            16
+          ],
+          [
+            8,
+            16
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            10,
+            16
+          ],
+          [
+            11,
+            16
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            13,
+            16
+          ],
+          [
+            14,
+            16
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            17,
+            16
+          ],
+          [
+            18,
+            16
+          ],
+          [
+            18,
+            15
+          ],
+          [
+            18,
+            14
+          ],
+          [
+            18,
+            13
+          ],
+          [
+            18,
+            12
+          ],
+          [
+            18,
+            11
+          ],
+          [
+            18,
+            10
+          ],
+          [
+            18,
+            9
+          ],
+          [
+            18,
+            8
+          ],
+          [
+            18,
+            7
+          ],
+          [
+            18,
+            6
+          ],
+          [
+            18,
+            5
+          ],
+          [
+            18,
+            4
+          ],
+          [
+            18,
+            3
+          ],
+          [
+            18,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-14",
+        "item": "ferrium",
+        "source": "refine_ferrium-2",
+        "sink": "shred_ferrium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            22
+          ],
+          [
+            7,
+            21
+          ],
+          [
+            7,
+            20
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            7,
+            18
+          ],
+          [
+            7,
+            17
+          ],
+          [
+            7,
+            16
+          ],
+          [
+            8,
+            16
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            10,
+            16
+          ],
+          [
+            11,
+            16
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            13,
+            16
+          ],
+          [
+            14,
+            16
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            17,
+            16
+          ],
+          [
+            18,
+            16
+          ],
+          [
+            18,
+            15
+          ],
+          [
+            18,
+            14
+          ],
+          [
+            18,
+            13
+          ],
+          [
+            18,
+            12
+          ],
+          [
+            18,
+            11
+          ],
+          [
+            18,
+            10
+          ],
+          [
+            18,
+            9
+          ],
+          [
+            18,
+            8
+          ],
+          [
+            18,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-15",
+        "item": "ferrium",
+        "source": "refine_ferrium-3",
+        "sink": "shred_ferrium_powder-3",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            28
+          ],
+          [
+            7,
+            27
+          ],
+          [
+            7,
+            26
+          ],
+          [
+            7,
+            25
+          ],
+          [
+            7,
+            24
+          ],
+          [
+            7,
+            23
+          ],
+          [
+            7,
+            22
+          ],
+          [
+            7,
+            21
+          ],
+          [
+            7,
+            20
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            7,
+            18
+          ],
+          [
+            7,
+            17
+          ],
+          [
+            7,
+            16
+          ],
+          [
+            8,
+            16
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            10,
+            16
+          ],
+          [
+            11,
+            16
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            13,
+            16
+          ],
+          [
+            14,
+            16
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            17,
+            16
+          ],
+          [
+            18,
+            16
+          ],
+          [
+            18,
+            15
+          ],
+          [
+            18,
+            14
+          ],
+          [
+            18,
+            13
+          ],
+          [
+            18,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "route-16",
+        "item": "ferrium",
+        "source": "refine_ferrium-4",
+        "sink": "shred_ferrium_powder-4",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            34
+          ],
+          [
+            7,
+            33
+          ],
+          [
+            7,
+            32
+          ],
+          [
+            7,
+            31
+          ],
+          [
+            7,
+            30
+          ],
+          [
+            7,
+            29
+          ],
+          [
+            7,
+            28
+          ],
+          [
+            7,
+            27
+          ],
+          [
+            7,
+            26
+          ],
+          [
+            7,
+            25
+          ],
+          [
+            7,
+            24
+          ],
+          [
+            7,
+            23
+          ],
+          [
+            7,
+            22
+          ],
+          [
+            7,
+            21
+          ],
+          [
+            7,
+            20
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            7,
+            18
+          ],
+          [
+            7,
+            17
+          ],
+          [
+            7,
+            16
+          ],
+          [
+            8,
+            16
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            10,
+            16
+          ],
+          [
+            11,
+            16
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            13,
+            16
+          ],
+          [
+            14,
+            16
+          ],
+          [
+            15,
+            16
+          ],
+          [
+            16,
+            16
+          ],
+          [
+            17,
+            16
+          ],
+          [
+            18,
+            16
+          ],
+          [
+            18,
+            17
+          ]
+        ]
+      },
+      {
+        "id": "route-17",
+        "item": "sandleaf",
+        "source": "plant_sandleaf-1",
+        "sink": "shred_sandleaf_powder-1",
+        "required_rate": 25.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            4
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            9,
+            4
+          ],
+          [
+            9,
+            5
+          ],
+          [
+            9,
+            6
+          ],
+          [
+            9,
+            7
+          ],
+          [
+            9,
+            8
+          ],
+          [
+            9,
+            9
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            9,
+            11
+          ],
+          [
+            9,
+            12
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            9,
+            14
+          ],
+          [
+            9,
+            15
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            9,
+            17
+          ],
+          [
+            9,
+            18
+          ],
+          [
+            9,
+            19
+          ],
+          [
+            9,
+            20
+          ],
+          [
+            9,
+            21
+          ],
+          [
+            9,
+            22
+          ],
+          [
+            10,
+            22
+          ],
+          [
+            11,
+            22
+          ],
+          [
+            12,
+            22
+          ],
+          [
+            13,
+            22
+          ],
+          [
+            14,
+            22
+          ],
+          [
+            15,
+            22
+          ],
+          [
+            16,
+            22
+          ],
+          [
+            17,
+            22
+          ],
+          [
+            18,
+            22
+          ]
+        ]
+      },
+      {
+        "id": "route-18",
+        "item": "sandleaf",
+        "source": "plant_sandleaf-1",
+        "sink": "shred_sandleaf_powder-2",
+        "required_rate": 5.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            4
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            9,
+            4
+          ],
+          [
+            9,
+            5
+          ],
+          [
+            9,
+            6
+          ],
+          [
+            9,
+            7
+          ],
+          [
+            9,
+            8
+          ],
+          [
+            9,
+            9
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            9,
+            11
+          ],
+          [
+            9,
+            12
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            9,
+            14
+          ],
+          [
+            9,
+            15
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            9,
+            17
+          ],
+          [
+            9,
+            18
+          ],
+          [
+            9,
+            19
+          ],
+          [
+            9,
+            20
+          ],
+          [
+            9,
+            21
+          ],
+          [
+            9,
+            22
+          ],
+          [
+            10,
+            22
+          ],
+          [
+            11,
+            22
+          ],
+          [
+            12,
+            22
+          ],
+          [
+            13,
+            22
+          ],
+          [
+            14,
+            22
+          ],
+          [
+            15,
+            22
+          ],
+          [
+            16,
+            22
+          ],
+          [
+            17,
+            22
+          ],
+          [
+            18,
+            22
+          ],
+          [
+            18,
+            23
+          ],
+          [
+            18,
+            24
+          ],
+          [
+            18,
+            25
+          ],
+          [
+            18,
+            26
+          ],
+          [
+            18,
+            27
+          ]
+        ]
+      },
+      {
+        "id": "route-19",
+        "item": "sandleaf",
+        "source": "plant_sandleaf-2",
+        "sink": "shred_sandleaf_powder-2",
+        "required_rate": 20.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            10
+          ],
+          [
+            8,
+            10
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            9,
+            11
+          ],
+          [
+            9,
+            12
+          ],
+          [
+            9,
+            13
+          ],
+          [
+            9,
+            14
+          ],
+          [
+            9,
+            15
+          ],
+          [
+            9,
+            16
+          ],
+          [
+            9,
+            17
+          ],
+          [
+            9,
+            18
+          ],
+          [
+            9,
+            19
+          ],
+          [
+            9,
+            20
+          ],
+          [
+            9,
+            21
+          ],
+          [
+            9,
+            22
+          ],
+          [
+            10,
+            22
+          ],
+          [
+            11,
+            22
+          ],
+          [
+            12,
+            22
+          ],
+          [
+            13,
+            22
+          ],
+          [
+            14,
+            22
+          ],
+          [
+            15,
+            22
+          ],
+          [
+            16,
+            22
+          ],
+          [
+            17,
+            22
+          ],
+          [
+            18,
+            22
+          ],
+          [
+            18,
+            23
+          ],
+          [
+            18,
+            24
+          ],
+          [
+            18,
+            25
+          ],
+          [
+            18,
+            26
+          ],
+          [
+            18,
+            27
+          ]
+        ]
+      },
+      {
+        "id": "route-20",
+        "item": "ferrium_powder",
+        "source": "shred_ferrium_powder-1",
+        "sink": "grind_dense_ferrium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            3
+          ],
+          [
+            24,
+            3
+          ],
+          [
+            25,
+            3
+          ],
+          [
+            26,
+            3
+          ],
+          [
+            27,
+            3
+          ],
+          [
+            27,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-21",
+        "item": "ferrium_powder",
+        "source": "shred_ferrium_powder-2",
+        "sink": "grind_dense_ferrium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            8
+          ],
+          [
+            23,
+            7
+          ],
+          [
+            23,
+            6
+          ],
+          [
+            23,
+            5
+          ],
+          [
+            23,
+            4
+          ],
+          [
+            23,
+            3
+          ],
+          [
+            24,
+            3
+          ],
+          [
+            25,
+            3
+          ],
+          [
+            26,
+            3
+          ],
+          [
+            27,
+            3
+          ],
+          [
+            27,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-22",
+        "item": "sandleaf_powder",
+        "source": "shred_sandleaf_powder-1",
+        "sink": "grind_dense_ferrium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            23
+          ],
+          [
+            24,
+            23
+          ],
+          [
+            25,
+            23
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            27,
+            23
+          ],
+          [
+            27,
+            22
+          ],
+          [
+            27,
+            21
+          ],
+          [
+            27,
+            20
+          ],
+          [
+            27,
+            19
+          ],
+          [
+            27,
+            18
+          ],
+          [
+            27,
+            17
+          ],
+          [
+            27,
+            16
+          ],
+          [
+            27,
+            15
+          ],
+          [
+            27,
+            14
+          ],
+          [
+            27,
+            13
+          ],
+          [
+            27,
+            12
+          ],
+          [
+            27,
+            11
+          ],
+          [
+            27,
+            10
+          ],
+          [
+            27,
+            9
+          ],
+          [
+            27,
+            8
+          ],
+          [
+            27,
+            7
+          ],
+          [
+            27,
+            6
+          ],
+          [
+            27,
+            5
+          ],
+          [
+            27,
+            4
+          ],
+          [
+            27,
+            3
+          ]
+        ]
+      },
+      {
+        "id": "route-23",
+        "item": "ferrium_powder",
+        "source": "shred_ferrium_powder-3",
+        "sink": "grind_dense_ferrium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            13
+          ],
+          [
+            23,
+            12
+          ],
+          [
+            23,
+            11
+          ],
+          [
+            23,
+            10
+          ],
+          [
+            23,
+            9
+          ],
+          [
+            23,
+            8
+          ],
+          [
+            23,
+            7
+          ],
+          [
+            24,
+            7
+          ],
+          [
+            25,
+            7
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            27,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-24",
+        "item": "ferrium_powder",
+        "source": "shred_ferrium_powder-4",
+        "sink": "grind_dense_ferrium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            18
+          ],
+          [
+            23,
+            17
+          ],
+          [
+            23,
+            16
+          ],
+          [
+            23,
+            15
+          ],
+          [
+            23,
+            14
+          ],
+          [
+            23,
+            13
+          ],
+          [
+            23,
+            12
+          ],
+          [
+            23,
+            11
+          ],
+          [
+            23,
+            10
+          ],
+          [
+            23,
+            9
+          ],
+          [
+            23,
+            8
+          ],
+          [
+            23,
+            7
+          ],
+          [
+            24,
+            7
+          ],
+          [
+            25,
+            7
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            27,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-25",
+        "item": "sandleaf_powder",
+        "source": "shred_sandleaf_powder-1",
+        "sink": "grind_dense_ferrium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            23
+          ],
+          [
+            24,
+            23
+          ],
+          [
+            25,
+            23
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            27,
+            23
+          ],
+          [
+            27,
+            22
+          ],
+          [
+            27,
+            21
+          ],
+          [
+            27,
+            20
+          ],
+          [
+            27,
+            19
+          ],
+          [
+            27,
+            18
+          ],
+          [
+            27,
+            17
+          ],
+          [
+            27,
+            16
+          ],
+          [
+            27,
+            15
+          ],
+          [
+            27,
+            14
+          ],
+          [
+            27,
+            13
+          ],
+          [
+            27,
+            12
+          ],
+          [
+            27,
+            11
+          ],
+          [
+            27,
+            10
+          ],
+          [
+            27,
+            9
+          ],
+          [
+            27,
+            8
+          ]
+        ]
+      },
+      {
+        "id": "route-26",
+        "item": "originium_powder",
+        "source": "shred_originium_powder-1",
+        "sink": "grind_dense_originium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            39
+          ],
+          [
+            8,
+            39
+          ],
+          [
+            9,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            11,
+            39
+          ],
+          [
+            12,
+            39
+          ],
+          [
+            13,
+            39
+          ],
+          [
+            14,
+            39
+          ],
+          [
+            15,
+            39
+          ],
+          [
+            16,
+            39
+          ],
+          [
+            17,
+            39
+          ],
+          [
+            18,
+            39
+          ],
+          [
+            19,
+            39
+          ],
+          [
+            20,
+            39
+          ],
+          [
+            21,
+            39
+          ],
+          [
+            22,
+            39
+          ],
+          [
+            23,
+            39
+          ],
+          [
+            24,
+            39
+          ],
+          [
+            25,
+            39
+          ],
+          [
+            26,
+            39
+          ],
+          [
+            26,
+            38
+          ],
+          [
+            26,
+            37
+          ],
+          [
+            26,
+            36
+          ],
+          [
+            26,
+            35
+          ],
+          [
+            26,
+            34
+          ],
+          [
+            26,
+            33
+          ],
+          [
+            26,
+            32
+          ],
+          [
+            26,
+            31
+          ],
+          [
+            26,
+            30
+          ],
+          [
+            26,
+            29
+          ],
+          [
+            26,
+            28
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            26,
+            25
+          ],
+          [
+            26,
+            24
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            26,
+            22
+          ],
+          [
+            26,
+            21
+          ],
+          [
+            26,
+            20
+          ],
+          [
+            26,
+            19
+          ],
+          [
+            26,
+            18
+          ],
+          [
+            26,
+            17
+          ],
+          [
+            26,
+            16
+          ],
+          [
+            26,
+            15
+          ],
+          [
+            26,
+            14
+          ],
+          [
+            26,
+            13
+          ],
+          [
+            26,
+            12
+          ],
+          [
+            27,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "route-27",
+        "item": "originium_powder",
+        "source": "shred_originium_powder-2",
+        "sink": "grind_dense_originium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            44
+          ],
+          [
+            7,
+            43
+          ],
+          [
+            7,
+            42
+          ],
+          [
+            7,
+            41
+          ],
+          [
+            7,
+            40
+          ],
+          [
+            7,
+            39
+          ],
+          [
+            8,
+            39
+          ],
+          [
+            9,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            11,
+            39
+          ],
+          [
+            12,
+            39
+          ],
+          [
+            13,
+            39
+          ],
+          [
+            14,
+            39
+          ],
+          [
+            15,
+            39
+          ],
+          [
+            16,
+            39
+          ],
+          [
+            17,
+            39
+          ],
+          [
+            18,
+            39
+          ],
+          [
+            19,
+            39
+          ],
+          [
+            20,
+            39
+          ],
+          [
+            21,
+            39
+          ],
+          [
+            22,
+            39
+          ],
+          [
+            23,
+            39
+          ],
+          [
+            24,
+            39
+          ],
+          [
+            25,
+            39
+          ],
+          [
+            26,
+            39
+          ],
+          [
+            26,
+            38
+          ],
+          [
+            26,
+            37
+          ],
+          [
+            26,
+            36
+          ],
+          [
+            26,
+            35
+          ],
+          [
+            26,
+            34
+          ],
+          [
+            26,
+            33
+          ],
+          [
+            26,
+            32
+          ],
+          [
+            26,
+            31
+          ],
+          [
+            26,
+            30
+          ],
+          [
+            26,
+            29
+          ],
+          [
+            26,
+            28
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            26,
+            25
+          ],
+          [
+            26,
+            24
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            26,
+            22
+          ],
+          [
+            26,
+            21
+          ],
+          [
+            26,
+            20
+          ],
+          [
+            26,
+            19
+          ],
+          [
+            26,
+            18
+          ],
+          [
+            26,
+            17
+          ],
+          [
+            26,
+            16
+          ],
+          [
+            26,
+            15
+          ],
+          [
+            26,
+            14
+          ],
+          [
+            26,
+            13
+          ],
+          [
+            26,
+            12
+          ],
+          [
+            27,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "route-28",
+        "item": "sandleaf_powder",
+        "source": "shred_sandleaf_powder-1",
+        "sink": "grind_dense_originium_powder-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            23
+          ],
+          [
+            24,
+            23
+          ],
+          [
+            25,
+            23
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            27,
+            23
+          ],
+          [
+            27,
+            22
+          ],
+          [
+            27,
+            21
+          ],
+          [
+            27,
+            20
+          ],
+          [
+            27,
+            19
+          ],
+          [
+            27,
+            18
+          ],
+          [
+            27,
+            17
+          ],
+          [
+            27,
+            16
+          ],
+          [
+            27,
+            15
+          ],
+          [
+            27,
+            14
+          ],
+          [
+            27,
+            13
+          ]
+        ]
+      },
+      {
+        "id": "route-29",
+        "item": "originium_powder",
+        "source": "shred_originium_powder-3",
+        "sink": "grind_dense_originium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            49
+          ],
+          [
+            7,
+            48
+          ],
+          [
+            7,
+            47
+          ],
+          [
+            7,
+            46
+          ],
+          [
+            7,
+            45
+          ],
+          [
+            7,
+            44
+          ],
+          [
+            7,
+            43
+          ],
+          [
+            7,
+            42
+          ],
+          [
+            7,
+            41
+          ],
+          [
+            7,
+            40
+          ],
+          [
+            7,
+            39
+          ],
+          [
+            8,
+            39
+          ],
+          [
+            9,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            11,
+            39
+          ],
+          [
+            12,
+            39
+          ],
+          [
+            13,
+            39
+          ],
+          [
+            14,
+            39
+          ],
+          [
+            15,
+            39
+          ],
+          [
+            16,
+            39
+          ],
+          [
+            17,
+            39
+          ],
+          [
+            18,
+            39
+          ],
+          [
+            19,
+            39
+          ],
+          [
+            20,
+            39
+          ],
+          [
+            21,
+            39
+          ],
+          [
+            22,
+            39
+          ],
+          [
+            23,
+            39
+          ],
+          [
+            24,
+            39
+          ],
+          [
+            25,
+            39
+          ],
+          [
+            26,
+            39
+          ],
+          [
+            26,
+            38
+          ],
+          [
+            26,
+            37
+          ],
+          [
+            26,
+            36
+          ],
+          [
+            26,
+            35
+          ],
+          [
+            26,
+            34
+          ],
+          [
+            26,
+            33
+          ],
+          [
+            26,
+            32
+          ],
+          [
+            26,
+            31
+          ],
+          [
+            26,
+            30
+          ],
+          [
+            26,
+            29
+          ],
+          [
+            26,
+            28
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            26,
+            25
+          ],
+          [
+            26,
+            24
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            26,
+            22
+          ],
+          [
+            26,
+            21
+          ],
+          [
+            26,
+            20
+          ],
+          [
+            26,
+            19
+          ],
+          [
+            26,
+            18
+          ],
+          [
+            26,
+            17
+          ],
+          [
+            27,
+            17
+          ]
+        ]
+      },
+      {
+        "id": "route-30",
+        "item": "originium_powder",
+        "source": "shred_originium_powder-4",
+        "sink": "grind_dense_originium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            54
+          ],
+          [
+            7,
+            53
+          ],
+          [
+            7,
+            52
+          ],
+          [
+            7,
+            51
+          ],
+          [
+            7,
+            50
+          ],
+          [
+            7,
+            49
+          ],
+          [
+            7,
+            48
+          ],
+          [
+            7,
+            47
+          ],
+          [
+            7,
+            46
+          ],
+          [
+            7,
+            45
+          ],
+          [
+            7,
+            44
+          ],
+          [
+            7,
+            43
+          ],
+          [
+            7,
+            42
+          ],
+          [
+            7,
+            41
+          ],
+          [
+            7,
+            40
+          ],
+          [
+            7,
+            39
+          ],
+          [
+            8,
+            39
+          ],
+          [
+            9,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            11,
+            39
+          ],
+          [
+            12,
+            39
+          ],
+          [
+            13,
+            39
+          ],
+          [
+            14,
+            39
+          ],
+          [
+            15,
+            39
+          ],
+          [
+            16,
+            39
+          ],
+          [
+            17,
+            39
+          ],
+          [
+            18,
+            39
+          ],
+          [
+            19,
+            39
+          ],
+          [
+            20,
+            39
+          ],
+          [
+            21,
+            39
+          ],
+          [
+            22,
+            39
+          ],
+          [
+            23,
+            39
+          ],
+          [
+            24,
+            39
+          ],
+          [
+            25,
+            39
+          ],
+          [
+            26,
+            39
+          ],
+          [
+            26,
+            38
+          ],
+          [
+            26,
+            37
+          ],
+          [
+            26,
+            36
+          ],
+          [
+            26,
+            35
+          ],
+          [
+            26,
+            34
+          ],
+          [
+            26,
+            33
+          ],
+          [
+            26,
+            32
+          ],
+          [
+            26,
+            31
+          ],
+          [
+            26,
+            30
+          ],
+          [
+            26,
+            29
+          ],
+          [
+            26,
+            28
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            26,
+            25
+          ],
+          [
+            26,
+            24
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            26,
+            22
+          ],
+          [
+            26,
+            21
+          ],
+          [
+            26,
+            20
+          ],
+          [
+            26,
+            19
+          ],
+          [
+            26,
+            18
+          ],
+          [
+            26,
+            17
+          ],
+          [
+            27,
+            17
+          ]
+        ]
+      },
+      {
+        "id": "route-31",
+        "item": "sandleaf_powder",
+        "source": "shred_sandleaf_powder-2",
+        "sink": "grind_dense_originium_powder-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            28
+          ],
+          [
+            23,
+            27
+          ],
+          [
+            23,
+            26
+          ],
+          [
+            23,
+            25
+          ],
+          [
+            23,
+            24
+          ],
+          [
+            23,
+            23
+          ],
+          [
+            24,
+            23
+          ],
+          [
+            25,
+            23
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            27,
+            23
+          ],
+          [
+            27,
+            22
+          ],
+          [
+            27,
+            21
+          ],
+          [
+            27,
+            20
+          ],
+          [
+            27,
+            19
+          ],
+          [
+            27,
+            18
+          ]
+        ]
+      },
+      {
+        "id": "route-32",
+        "item": "originium_powder",
+        "source": "shred_originium_powder-5",
+        "sink": "grind_dense_originium_powder-3",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            7,
+            59
+          ],
+          [
+            7,
+            58
+          ],
+          [
+            7,
+            57
+          ],
+          [
+            7,
+            56
+          ],
+          [
+            7,
+            55
+          ],
+          [
+            7,
+            54
+          ],
+          [
+            7,
+            53
+          ],
+          [
+            7,
+            52
+          ],
+          [
+            7,
+            51
+          ],
+          [
+            7,
+            50
+          ],
+          [
+            7,
+            49
+          ],
+          [
+            7,
+            48
+          ],
+          [
+            7,
+            47
+          ],
+          [
+            7,
+            46
+          ],
+          [
+            7,
+            45
+          ],
+          [
+            7,
+            44
+          ],
+          [
+            7,
+            43
+          ],
+          [
+            7,
+            42
+          ],
+          [
+            7,
+            41
+          ],
+          [
+            7,
+            40
+          ],
+          [
+            7,
+            39
+          ],
+          [
+            8,
+            39
+          ],
+          [
+            9,
+            39
+          ],
+          [
+            10,
+            39
+          ],
+          [
+            11,
+            39
+          ],
+          [
+            12,
+            39
+          ],
+          [
+            13,
+            39
+          ],
+          [
+            14,
+            39
+          ],
+          [
+            15,
+            39
+          ],
+          [
+            16,
+            39
+          ],
+          [
+            17,
+            39
+          ],
+          [
+            18,
+            39
+          ],
+          [
+            19,
+            39
+          ],
+          [
+            20,
+            39
+          ],
+          [
+            21,
+            39
+          ],
+          [
+            22,
+            39
+          ],
+          [
+            23,
+            39
+          ],
+          [
+            24,
+            39
+          ],
+          [
+            25,
+            39
+          ],
+          [
+            26,
+            39
+          ],
+          [
+            26,
+            38
+          ],
+          [
+            26,
+            37
+          ],
+          [
+            26,
+            36
+          ],
+          [
+            26,
+            35
+          ],
+          [
+            26,
+            34
+          ],
+          [
+            26,
+            33
+          ],
+          [
+            26,
+            32
+          ],
+          [
+            26,
+            31
+          ],
+          [
+            26,
+            30
+          ],
+          [
+            26,
+            29
+          ],
+          [
+            26,
+            28
+          ],
+          [
+            26,
+            27
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            26,
+            25
+          ],
+          [
+            26,
+            24
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            26,
+            22
+          ],
+          [
+            27,
+            22
+          ]
+        ]
+      },
+      {
+        "id": "route-33",
+        "item": "originium_powder",
+        "source": "shred_originium_powder-6",
+        "sink": "grind_dense_originium_powder-3",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            14,
+            3
+          ],
+          [
+            14,
+            4
+          ],
+          [
+            14,
+            5
+          ],
+          [
+            14,
+            6
+          ],
+          [
+            14,
+            7
+          ],
+          [
+            14,
+            8
+          ],
+          [
+            14,
+            9
+          ],
+          [
+            14,
+            10
+          ],
+          [
+            14,
+            11
+          ],
+          [
+            14,
+            12
+          ],
+          [
+            14,
+            13
+          ],
+          [
+            14,
+            14
+          ],
+          [
+            14,
+            15
+          ],
+          [
+            14,
+            16
+          ],
+          [
+            14,
+            17
+          ],
+          [
+            14,
+            18
+          ],
+          [
+            14,
+            19
+          ],
+          [
+            14,
+            20
+          ],
+          [
+            15,
+            20
+          ],
+          [
+            16,
+            20
+          ],
+          [
+            17,
+            20
+          ],
+          [
+            18,
+            20
+          ],
+          [
+            19,
+            20
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            21,
+            20
+          ],
+          [
+            22,
+            20
+          ],
+          [
+            23,
+            20
+          ],
+          [
+            24,
+            20
+          ],
+          [
+            25,
+            20
+          ],
+          [
+            26,
+            20
+          ],
+          [
+            26,
+            21
+          ],
+          [
+            26,
+            22
+          ],
+          [
+            27,
+            22
+          ]
+        ]
+      },
+      {
+        "id": "route-34",
+        "item": "sandleaf_powder",
+        "source": "shred_sandleaf_powder-2",
+        "sink": "grind_dense_originium_powder-3",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            23,
+            28
+          ],
+          [
+            23,
+            27
+          ],
+          [
+            23,
+            26
+          ],
+          [
+            23,
+            25
+          ],
+          [
+            23,
+            24
+          ],
+          [
+            23,
+            23
+          ],
+          [
+            24,
+            23
+          ],
+          [
+            25,
+            23
+          ],
+          [
+            26,
+            23
+          ],
+          [
+            27,
+            23
+          ]
+        ]
+      },
+      {
+        "id": "route-35",
+        "item": "dense_ferrium_powder",
+        "source": "grind_dense_ferrium_powder-1",
+        "sink": "refine_steel-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            33,
+            3
+          ],
+          [
+            34,
+            3
+          ],
+          [
+            35,
+            3
+          ],
+          [
+            36,
+            3
+          ],
+          [
+            37,
+            3
+          ],
+          [
+            37,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-36",
+        "item": "dense_ferrium_powder",
+        "source": "grind_dense_ferrium_powder-2",
+        "sink": "refine_steel-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            33,
+            8
+          ],
+          [
+            34,
+            8
+          ],
+          [
+            35,
+            8
+          ],
+          [
+            36,
+            8
+          ],
+          [
+            37,
+            8
+          ]
+        ]
+      },
+      {
+        "id": "route-37",
+        "item": "steel",
+        "source": "refine_steel-1",
+        "sink": "fit_steel_part-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            42,
+            4
+          ],
+          [
+            43,
+            4
+          ],
+          [
+            44,
+            4
+          ],
+          [
+            45,
+            4
+          ],
+          [
+            46,
+            4
+          ],
+          [
+            46,
+            3
+          ],
+          [
+            46,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-38",
+        "item": "steel",
+        "source": "refine_steel-2",
+        "sink": "fit_steel_part-2",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            42,
+            10
+          ],
+          [
+            43,
+            10
+          ],
+          [
+            44,
+            10
+          ],
+          [
+            45,
+            10
+          ],
+          [
+            46,
+            10
+          ],
+          [
+            46,
+            9
+          ],
+          [
+            46,
+            8
+          ],
+          [
+            46,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-39",
+        "item": "steel_part",
+        "source": "fit_steel_part-1",
+        "sink": "package_hc_valley_battery-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            51,
+            3
+          ],
+          [
+            52,
+            3
+          ],
+          [
+            53,
+            3
+          ],
+          [
+            54,
+            3
+          ],
+          [
+            55,
+            3
+          ],
+          [
+            55,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-40",
+        "item": "steel_part",
+        "source": "fit_steel_part-2",
+        "sink": "package_hc_valley_battery-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            51,
+            8
+          ],
+          [
+            51,
+            7
+          ],
+          [
+            51,
+            6
+          ],
+          [
+            51,
+            5
+          ],
+          [
+            51,
+            4
+          ],
+          [
+            51,
+            3
+          ],
+          [
+            52,
+            3
+          ],
+          [
+            53,
+            3
+          ],
+          [
+            54,
+            3
+          ],
+          [
+            55,
+            3
+          ],
+          [
+            55,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-41",
+        "item": "dense_originium_powder",
+        "source": "grind_dense_originium_powder-1",
+        "sink": "package_hc_valley_battery-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            33,
+            13
+          ],
+          [
+            34,
+            13
+          ],
+          [
+            35,
+            13
+          ],
+          [
+            36,
+            13
+          ],
+          [
+            37,
+            13
+          ],
+          [
+            38,
+            13
+          ],
+          [
+            39,
+            13
+          ],
+          [
+            40,
+            13
+          ],
+          [
+            41,
+            13
+          ],
+          [
+            42,
+            13
+          ],
+          [
+            43,
+            13
+          ],
+          [
+            44,
+            13
+          ],
+          [
+            45,
+            13
+          ],
+          [
+            46,
+            13
+          ],
+          [
+            47,
+            13
+          ],
+          [
+            48,
+            13
+          ],
+          [
+            49,
+            13
+          ],
+          [
+            50,
+            13
+          ],
+          [
+            51,
+            13
+          ],
+          [
+            52,
+            13
+          ],
+          [
+            53,
+            13
+          ],
+          [
+            54,
+            13
+          ],
+          [
+            55,
+            13
+          ],
+          [
+            55,
+            12
+          ],
+          [
+            55,
+            11
+          ],
+          [
+            55,
+            10
+          ],
+          [
+            55,
+            9
+          ],
+          [
+            55,
+            8
+          ],
+          [
+            55,
+            7
+          ],
+          [
+            55,
+            6
+          ],
+          [
+            55,
+            5
+          ],
+          [
+            55,
+            4
+          ],
+          [
+            55,
+            3
+          ]
+        ]
+      },
+      {
+        "id": "route-42",
+        "item": "dense_originium_powder",
+        "source": "grind_dense_originium_powder-2",
+        "sink": "package_hc_valley_battery-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            33,
+            18
+          ],
+          [
+            33,
+            17
+          ],
+          [
+            33,
+            16
+          ],
+          [
+            33,
+            15
+          ],
+          [
+            33,
+            14
+          ],
+          [
+            33,
+            13
+          ],
+          [
+            34,
+            13
+          ],
+          [
+            35,
+            13
+          ],
+          [
+            36,
+            13
+          ],
+          [
+            37,
+            13
+          ],
+          [
+            38,
+            13
+          ],
+          [
+            39,
+            13
+          ],
+          [
+            40,
+            13
+          ],
+          [
+            41,
+            13
+          ],
+          [
+            42,
+            13
+          ],
+          [
+            43,
+            13
+          ],
+          [
+            44,
+            13
+          ],
+          [
+            45,
+            13
+          ],
+          [
+            46,
+            13
+          ],
+          [
+            47,
+            13
+          ],
+          [
+            48,
+            13
+          ],
+          [
+            49,
+            13
+          ],
+          [
+            50,
+            13
+          ],
+          [
+            51,
+            13
+          ],
+          [
+            52,
+            13
+          ],
+          [
+            53,
+            13
+          ],
+          [
+            54,
+            13
+          ],
+          [
+            55,
+            13
+          ],
+          [
+            55,
+            12
+          ],
+          [
+            55,
+            11
+          ],
+          [
+            55,
+            10
+          ],
+          [
+            55,
+            9
+          ],
+          [
+            55,
+            8
+          ],
+          [
+            55,
+            7
+          ],
+          [
+            55,
+            6
+          ],
+          [
+            55,
+            5
+          ],
+          [
+            55,
+            4
+          ],
+          [
+            55,
+            3
+          ]
+        ]
+      },
+      {
+        "id": "route-43",
+        "item": "dense_originium_powder",
+        "source": "grind_dense_originium_powder-3",
+        "sink": "package_hc_valley_battery-1",
+        "required_rate": 30.0,
+        "capacity": 30.0,
+        "points": [
+          [
+            33,
+            23
+          ],
+          [
+            33,
+            22
+          ],
+          [
+            33,
+            21
+          ],
+          [
+            33,
+            20
+          ],
+          [
+            33,
+            19
+          ],
+          [
+            33,
+            18
+          ],
+          [
+            33,
+            17
+          ],
+          [
+            33,
+            16
+          ],
+          [
+            33,
+            15
+          ],
+          [
+            33,
+            14
+          ],
+          [
+            33,
+            13
+          ],
+          [
+            34,
+            13
+          ],
+          [
+            35,
+            13
+          ],
+          [
+            36,
+            13
+          ],
+          [
+            37,
+            13
+          ],
+          [
+            38,
+            13
+          ],
+          [
+            39,
+            13
+          ],
+          [
+            40,
+            13
+          ],
+          [
+            41,
+            13
+          ],
+          [
+            42,
+            13
+          ],
+          [
+            43,
+            13
+          ],
+          [
+            44,
+            13
+          ],
+          [
+            45,
+            13
+          ],
+          [
+            46,
+            13
+          ],
+          [
+            47,
+            13
+          ],
+          [
+            48,
+            13
+          ],
+          [
+            49,
+            13
+          ],
+          [
+            50,
+            13
+          ],
+          [
+            51,
+            13
+          ],
+          [
+            52,
+            13
+          ],
+          [
+            53,
+            13
+          ],
+          [
+            54,
+            13
+          ],
+          [
+            55,
+            13
+          ],
+          [
+            55,
+            12
+          ],
+          [
+            55,
+            11
+          ],
+          [
+            55,
+            10
+          ],
+          [
+            55,
+            9
+          ],
+          [
+            55,
+            8
+          ],
+          [
+            55,
+            7
+          ],
+          [
+            55,
+            6
+          ],
+          [
+            55,
+            5
+          ],
+          [
+            55,
+            4
+          ],
+          [
+            55,
+            3
+          ]
+        ]
+      }
+    ]
+  },
+  "metrics": {
+    "device_count": 28,
+    "device_tiles": 391,
+    "route_count": 43,
+    "route_tiles": 351,
+    "total_route_length": 797,
+    "route_bends": 56,
+    "crossing_tiles": 10,
+    "buildable_tiles": 10162,
+    "used_tiles": 742,
+    "area_utilization_percent": 7.301712261365873,
+    "power_utilization_percent": 33.55555555555556,
+    "raw_input_rate_per_minute": 350.0
+  },
+  "routing_stats": {
+    "backend_name": "serial-compact-grid-astar",
+    "requested_jobs": 1,
+    "effective_jobs": 1,
+    "deterministic": true,
+    "seed": 0,
+    "routes_requested": 43,
+    "routes_completed": 43,
+    "routes_failed": 0,
+    "astar_calls": 43,
+    "expanded_states": 40178,
+    "generated_states": 48886,
+    "heap_pushes": 48886,
+    "peak_frontier": 752,
+    "total_path_length": 797,
+    "elapsed_seconds": 0.06528559999424033,
+    "cpu_seconds": 0.046875,
+    "observed_core_equivalents": 0.7179990687706851,
+    "timed_out": false
+  },
+  "diagnostics": [
+    {
+      "severity": "info",
+      "code": "POWER_BUDGET_OK",
+      "message": "Power usage is 604.0 / 1800.0."
+    },
+    {
+      "severity": "info",
+      "code": "ROUTE_CROSSINGS",
+      "message": "10 logistics crossing(s) use the region's abstract bridge capability."
+    },
+    {
+      "severity": "info",
+      "code": "DRC_SUMMARY",
+      "message": "DRC completed with 0 error(s) and 0 warning(s)."
+    }
+  ]
+}
