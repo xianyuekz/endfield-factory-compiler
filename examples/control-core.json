@@ -1,9 +1,14 @@
 {
+  "$schema": "../schemas/project.schema.json",
   "schema_version": 1,
   "name": "8 Control Cores per Minute",
   "region_pack": "../region-packs/demo-valley/region.json",
   "targets": {
     "control_core": 8
+  },
+  "constraints": {
+    "max_power": 400,
+    "max_devices": 16,
+    "max_route_tiles": 240
   }
 }
-

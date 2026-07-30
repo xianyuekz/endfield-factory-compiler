@@ -10,5 +10,4 @@ __all__ = [
     "load_region_pack",
 ]
 
-__version__ = "0.1.0"
-
+__version__ = "0.2.0"

@@ -21,7 +21,9 @@ Schema version 1 uses one JSON file:
   },
   "logistics": {
     "tile_capacity_per_minute": 60,
-    "allow_crossings": false
+    "allow_crossings": false,
+    "crossing_penalty": 8,
+    "bend_penalty": 0.4
   },
   "items": {
     "ore": {"name": "Ore"},
@@ -55,6 +57,10 @@ the left edge; the output port is centered on the right edge.
 one tile as an abstract bridge/underpass. Packs should enable it only when the
 target region has an equivalent capability.
 
+`crossing_penalty` controls how strongly the router avoids such abstract
+bridges. `bend_penalty` favors simpler paths with fewer turns. Both values must
+be zero or greater and are routing costs rather than physical rates.
+
 ## Versioning
 
 - `schema_version` describes the file format and is currently `1`.
@@ -80,4 +86,3 @@ schema changes before adding incompatible fields.
 Submit only data that contributors are allowed to redistribute. Cite public
 sources in the pull-request description, and do not commit extracted textures,
 icons, audio, proprietary map files or other copyrighted assets.
-

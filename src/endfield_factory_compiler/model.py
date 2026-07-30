@@ -55,6 +55,8 @@ class RecipeSpec:
 class LogisticsSpec:
     tile_capacity_per_minute: float
     allow_crossings: bool = False
+    crossing_penalty: float = 8.0
+    bend_penalty: float = 0.4
 
 
 @dataclass(frozen=True)
@@ -79,6 +81,14 @@ class Project:
     name: str
     region_pack_path: str
     targets: dict[str, float]
+    constraints: ProjectConstraints = field(default_factory=lambda: ProjectConstraints())
+
+
+@dataclass(frozen=True)
+class ProjectConstraints:
+    max_power: float | None = None
+    max_devices: int | None = None
+    max_route_tiles: int | None = None
 
 
 @dataclass
@@ -140,11 +150,31 @@ class Route:
     def routed(self) -> bool:
         return bool(self.points)
 
+    @property
+    def length(self) -> int:
+        return max(0, len(self.points) - 1)
+
 
 @dataclass
 class LayoutResult:
     devices: list[PlacedDevice]
     routes: list[Route]
+
+
+@dataclass
+class CompilationMetrics:
+    device_count: int
+    device_tiles: int
+    route_count: int
+    route_tiles: int
+    total_route_length: int
+    route_bends: int
+    crossing_tiles: int
+    buildable_tiles: int
+    used_tiles: int
+    area_utilization_percent: float
+    power_utilization_percent: float
+    raw_input_rate_per_minute: float
 
 
 @dataclass

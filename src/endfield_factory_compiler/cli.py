@@ -10,7 +10,8 @@ from .compiler import compile_project
 from .pack import PackError, load_project, load_region_pack
 from .placement import PlacementError
 from .render import render_svg
-from .synthesis import SynthesisError
+from .report import render_markdown
+from .synthesis import SynthesisError, synthesize
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -38,6 +39,12 @@ def _parser() -> argparse.ArgumentParser:
         "validate-pack", help="Validate a region pack"
     )
     validate_command.add_argument("pack", type=Path)
+
+    validate_project_command = commands.add_parser(
+        "validate-project",
+        help="Validate a project and its logical production graph",
+    )
+    validate_project_command.add_argument("project", type=Path)
     return parser
 
 
@@ -49,6 +56,7 @@ def _compile(project_path: Path, output: Path) -> int:
     output.mkdir(parents=True, exist_ok=True)
     plan_path = output / "plan.json"
     svg_path = output / "layout.svg"
+    report_path = output / "report.md"
     plan_path.write_text(
         json.dumps(result.to_dict(), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -59,21 +67,28 @@ def _compile(project_path: Path, output: Path) -> int:
             pack,
             result.synthesis,
             result.layout,
+            result.metrics,
             result.diagnostics,
         ),
         encoding="utf-8",
     )
+    report_path.write_text(render_markdown(result), encoding="utf-8")
 
     errors = sum(item.severity == "error" for item in result.diagnostics)
     print(f"Compiled {project.name!r}")
     print(
         f"  {len(result.layout.devices)} devices, "
         f"{len(result.layout.routes)} routes, "
-        f"{result.synthesis.total_power:.1f} power"
+        f"{result.metrics.route_tiles} route tiles"
+    )
+    print(
+        f"  {result.synthesis.total_power:.1f} power, "
+        f"{result.metrics.area_utilization_percent:.1f}% area"
     )
     print(f"  DRC: {errors} error(s)")
     print(f"  Plan: {plan_path}")
     print(f"  SVG:  {svg_path}")
+    print(f"  Report: {report_path}")
     return 1 if result.has_errors else 0
 
 
@@ -89,6 +104,16 @@ def main(argv: list[str] | None = None) -> int:
                 f"{len(pack.devices)} devices, {len(pack.recipes)} recipes"
             )
             return 0
+        if args.command == "validate-project":
+            project = load_project(args.project)
+            pack = load_region_pack(project.region_pack_path)
+            synthesis = synthesize(pack, project.targets)
+            print(
+                f"Valid project {project.name!r}: "
+                f"{len(synthesis.nodes)} production stages, "
+                f"{sum(node.machine_count for node in synthesis.nodes)} devices"
+            )
+            return 0
     except (PackError, PlacementError, SynthesisError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -97,4 +122,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

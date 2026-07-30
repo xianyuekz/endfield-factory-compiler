@@ -1,3 +1,5 @@
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -15,12 +17,32 @@ class RegionPackTests(unittest.TestCase):
         self.assertEqual(len(pack.devices), 4)
         self.assertEqual(len(pack.recipes), 5)
         self.assertEqual(pack.recipe_by_output()["control_core"].device, "constructor")
+        self.assertTrue(pack.logistics.allow_crossings)
+        self.assertEqual(pack.logistics.crossing_penalty, 8)
+        self.assertEqual(pack.logistics.bend_penalty, 0.4)
 
     def test_missing_pack_is_reported(self):
         with self.assertRaises(PackError):
             load_region_pack(ROOT / "does-not-exist.json")
 
+    def test_boolean_fields_do_not_accept_strings(self):
+        data = json.loads(PACK.read_text(encoding="utf-8"))
+        data["logistics"]["allow_crossings"] = "false"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "region.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaisesRegex(PackError, "must be true or false"):
+                load_region_pack(path)
+
+    def test_grid_dimensions_must_be_whole_numbers(self):
+        data = json.loads(PACK.read_text(encoding="utf-8"))
+        data["grid"]["width"] = 63.5
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "region.json"
+            path.write_text(json.dumps(data), encoding="utf-8")
+            with self.assertRaisesRegex(PackError, "whole number"):
+                load_region_pack(path)
+
 
 if __name__ == "__main__":
     unittest.main()
-

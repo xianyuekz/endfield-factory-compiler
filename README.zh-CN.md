@@ -18,9 +18,9 @@
   → 配方综合
   → 地区技术映射
   → 设备放置
-  → A* 物流布线
+  → 感知拥塞的 A* 物流布线
   → 设计规则检查
-  → SVG + JSON 施工方案
+  → SVG + JSON + Markdown 报告
 ```
 
 当前示例会把“每分钟 8 个控制核心”编译为 13 台设备、18 条物流路径，并通过
@@ -38,11 +38,12 @@ python -m venv .venv
 python -m pip install -e .
 
 efc validate-pack region-packs/demo-valley/region.json
+efc validate-project examples/control-core.json
 efc compile examples/control-core.json --out build/demo
 ```
 
 用浏览器打开 `build/demo/layout.svg` 即可查看布局；机器可读的物理设计结果位于
-`build/demo/plan.json`。
+`build/demo/plan.json`，可读的编译报告位于 `build/demo/report.md`。
 
 运行测试：
 
@@ -59,6 +60,9 @@ python -m unittest discover -s tests -v
 格式说明见[地区包规范](docs/REGION_PACKS.md)，示例见虚构的
 [`demo-valley`](region-packs/demo-valley/region.json)。
 
+工程还可以约束最大功耗、设备数量和物流格数量，详见
+[工程文件规范](docs/PROJECTS.md)。
+
 ## 当前边界
 
 已经实现：
@@ -67,9 +71,12 @@ python -m unittest discover -s tests -v
 - 功耗预算计算
 - 数据驱动的设备、配方、障碍物和物流能力
 - 可避开障碍物的确定性分层放置
-- 支持可选抽象交叉能力的 A* 布线
+- 带交叉和转弯代价、感知拥塞的 A* 布线
 - 越界、重叠、功耗、物流容量及连通性 DRC
-- 零依赖 JSON 和 SVG 输出
+- 工程级功耗、设备数量和物流格约束
+- 占地率、路线长度、转弯和交叉等物理设计指标
+- 支持编辑器校验和自动补全的 JSON Schema
+- 零依赖 JSON、SVG 和 Markdown 输出
 
 暂不实现：
 
@@ -88,6 +95,7 @@ python -m unittest discover -s tests -v
 
 准备较大改动前，请阅读[架构说明](docs/ARCHITECTURE.md)和
 [贡献指南](CONTRIBUTING.md)。
+版本变化记录在[更新日志](CHANGELOG.md)中。
 
 ## 免责声明
 

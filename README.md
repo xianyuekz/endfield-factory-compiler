@@ -19,9 +19,9 @@ production targets
   -> recipe synthesis
   -> region technology mapping
   -> device placement
-  -> A* logistics routing
+  -> congestion-aware A* logistics routing
   -> design-rule checks
-  -> SVG + JSON plan
+  -> SVG + JSON + Markdown report
 ```
 
 The demo compiles a target of 8 control cores per minute into 13 devices and 18
@@ -40,11 +40,13 @@ python -m venv .venv
 python -m pip install -e .
 
 efc validate-pack region-packs/demo-valley/region.json
+efc validate-project examples/control-core.json
 efc compile examples/control-core.json --out build/demo
 ```
 
 Open `build/demo/layout.svg` in a browser. The machine-readable physical plan
-is written to `build/demo/plan.json`.
+is written to `build/demo/plan.json`, and an explainable build report is
+written to `build/demo/report.md`.
 
 Run the test suite with:
 
@@ -62,6 +64,9 @@ an FPGA family in Quartus.
 See [the region-pack format](docs/REGION_PACKS.md) and the fictional
 [`demo-valley`](region-packs/demo-valley/region.json) pack.
 
+Projects may also set hard limits for power, device count and unique logistics
+tiles. See [the project format](docs/PROJECTS.md).
+
 ## Current scope
 
 Implemented:
@@ -70,9 +75,12 @@ Implemented:
 - power-budget calculation
 - data-driven devices, recipes, grid obstacles and logistics capabilities
 - deterministic column placement with obstacle avoidance
-- A* routing with optional abstract crossings
+- congestion-aware A* routing with crossing and bend costs
 - DRC for bounds, overlap, power, route capacity and connectivity
-- dependency-free JSON and SVG output
+- project-level power, device-count and route-tile constraints
+- physical metrics for footprint, utilization, route length, bends and crossings
+- JSON Schema files for editor validation and autocomplete
+- dependency-free JSON, SVG and Markdown output
 
 Deliberately not implemented:
 
@@ -92,6 +100,7 @@ guaranteed, and new maintainers are explicitly welcome.
 
 Read [the architecture](docs/ARCHITECTURE.md) and
 [contribution guide](CONTRIBUTING.md) before starting a larger change.
+Release changes are recorded in the [changelog](CHANGELOG.md).
 
 ## Disclaimer
 

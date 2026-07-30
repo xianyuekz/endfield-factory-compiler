@@ -1,8 +1,9 @@
 {
+  "$schema": "../../schemas/region-pack.schema.json",
   "schema_version": 1,
   "id": "demo-valley",
   "name": "Demo Valley (fictional data)",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "grid": {
     "width": 64,
     "height": 34,
@@ -24,7 +25,9 @@
   },
   "logistics": {
     "tile_capacity_per_minute": 60,
-    "allow_crossings": true
+    "allow_crossings": true,
+    "crossing_penalty": 8,
+    "bend_penalty": 0.4
   },
   "items": {
     "iron_ore": {

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/xianyuekz/endfield-factory-compiler/main/schemas/project.schema.json",
+  "title": "Endfield Factory Compiler project",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "name",
+    "region_pack",
+    "targets"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region_pack": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_power": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_devices": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_route_tiles": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

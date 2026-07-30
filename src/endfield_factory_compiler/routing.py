@@ -24,38 +24,72 @@ def _astar(
     width: int,
     height: int,
     blocked: set[tuple[int, int]],
+    route_occupancy: dict[tuple[int, int], set[str]],
+    item: str,
+    allow_crossings: bool,
+    crossing_penalty: float,
+    bend_penalty: float,
 ) -> list[tuple[int, int]]:
     if start in blocked or goal in blocked:
         return []
     serial = count()
-    frontier: list[tuple[int, int, tuple[int, int]]] = [
-        (0, next(serial), start)
-    ]
-    came_from: dict[tuple[int, int], tuple[int, int] | None] = {start: None}
-    cost: dict[tuple[int, int], int] = {start: 0}
+    start_state = (start, None)
+    frontier: list[
+        tuple[float, int, tuple[tuple[int, int], tuple[int, int] | None]]
+    ] = [(0.0, next(serial), start_state)]
+    came_from: dict[
+        tuple[tuple[int, int], tuple[int, int] | None],
+        tuple[tuple[int, int], tuple[int, int] | None] | None,
+    ] = {start_state: None}
+    cost: dict[
+        tuple[tuple[int, int], tuple[int, int] | None], float
+    ] = {start_state: 0.0}
 
     while frontier:
-        _, _, current = heapq.heappop(frontier)
+        _, _, current_state = heapq.heappop(frontier)
+        current, previous_direction = current_state
         if current == goal:
-            path = []
-            cursor: tuple[int, int] | None = current
+            path: list[tuple[int, int]] = []
+            cursor = current_state
             while cursor is not None:
-                path.append(cursor)
+                path.append(cursor[0])
                 cursor = came_from[cursor]
             return list(reversed(path))
         for neighbor in _neighbors(current, width, height):
             if neighbor in blocked:
                 continue
-            new_cost = cost[current] + 1
-            if neighbor not in cost or new_cost < cost[neighbor]:
-                cost[neighbor] = new_cost
-                priority = new_cost + abs(goal[0] - neighbor[0]) + abs(
-                    goal[1] - neighbor[1]
+            direction = (neighbor[0] - current[0], neighbor[1] - current[1])
+            occupied_items = route_occupancy.get(neighbor, set())
+            different_items = occupied_items - {item}
+            if different_items and not allow_crossings:
+                continue
+
+            step_cost = 1.0
+            if item in occupied_items and not different_items:
+                step_cost = 0.65
+            if different_items:
+                step_cost += crossing_penalty
+            if (
+                previous_direction is not None
+                and direction != previous_direction
+            ):
+                step_cost += bend_penalty
+
+            neighbor_state = (neighbor, direction)
+            new_cost = cost[current_state] + step_cost
+            if (
+                neighbor_state not in cost
+                or new_cost < cost[neighbor_state]
+            ):
+                cost[neighbor_state] = new_cost
+                heuristic = 0.65 * (
+                    abs(goal[0] - neighbor[0]) + abs(goal[1] - neighbor[1])
                 )
                 heapq.heappush(
-                    frontier, (priority, next(serial), neighbor)
+                    frontier,
+                    (new_cost + heuristic, next(serial), neighbor_state),
                 )
-                came_from[neighbor] = current
+                came_from[neighbor_state] = current_state
     return []
 
 
@@ -83,7 +117,7 @@ def route_logistics(
     device_cells = set().union(*(device.rect.cells() for device in devices))
     obstacle_cells = set().union(*(rect.cells() for rect in pack.grid.obstacles))
     hard_blocked = device_cells | obstacle_cells
-    route_occupancy: dict[tuple[int, int], str] = {}
+    route_occupancy: dict[tuple[int, int], set[str]] = defaultdict(set)
     producers: dict[str, list[PlacedDevice]] = defaultdict(list)
     consumers_by_recipe: dict[str, list[PlacedDevice]] = defaultdict(list)
     for device in devices:
@@ -113,8 +147,8 @@ def route_logistics(
                     if not pack.logistics.allow_crossings:
                         route_blocked |= {
                             point
-                            for point, occupied_item in route_occupancy.items()
-                            if occupied_item != item
+                            for point, occupied_items in route_occupancy.items()
+                            if occupied_items - {item}
                         }
                     boundary = _boundary_port(sink[1], pack, route_blocked)
                     if boundary is None:
@@ -127,8 +161,8 @@ def route_logistics(
                 if not pack.logistics.allow_crossings:
                     blocked |= {
                         point
-                        for point, occupied_item in route_occupancy.items()
-                        if occupied_item != item
+                        for point, occupied_items in route_occupancy.items()
+                        if occupied_items - {item}
                     }
                 blocked.discard(source)
                 blocked.discard(sink)
@@ -139,13 +173,18 @@ def route_logistics(
                         pack.grid.width,
                         pack.grid.height,
                         blocked,
+                        route_occupancy,
+                        item,
+                        pack.logistics.allow_crossings,
+                        pack.logistics.crossing_penalty,
+                        pack.logistics.bend_penalty,
                     )
                     if source[0] >= 0
                     else []
                 )
                 if points:
                     for point in points:
-                        route_occupancy.setdefault(point, item)
+                        route_occupancy[point].add(item)
                 routes.append(
                     Route(
                         id=f"route-{route_number}",

@@ -23,7 +23,8 @@ project.json             region.json
            DRC
             │
             ├── plan.json
-            └── layout.svg
+            ├── layout.svg
+            └── report.md
 ```
 
 ## Modules
@@ -32,14 +33,17 @@ project.json             region.json
 - `synthesis.py` expands target rates into a DAG and maps recipes to devices.
 - `placement.py` performs deterministic, obstacle-aware column placement.
 - `routing.py` connects device ports using grid-based A*.
+- `metrics.py` measures physical area, route length, bends and crossings.
 - `drc.py` checks physical and throughput constraints.
 - `render.py` produces a standalone SVG report.
+- `report.py` produces a deterministic, reviewable Markdown report.
 - `compiler.py` owns the pipeline and stable result object.
 - `cli.py` is a thin shell over the library API.
 
-The current implementation is deliberately dependency-free. A future CP-SAT,
-MILP or PathFinder backend should be optional and should consume/produce the
-same intermediate models.
+The current implementation is deliberately dependency-free. Its A* router
+prices congestion, incompatible crossings and bends while remaining
+deterministic. A future CP-SAT, MILP or PathFinder backend should be optional
+and should consume/produce the same intermediate models.
 
 ## Design principles
 
@@ -75,4 +79,3 @@ add:
 Official blueprint-code support is not assumed. If a documented and permitted
 format becomes available, implement it as an adapter from `plan.json`.
 The physical-design pipeline must remain usable without that adapter.
-

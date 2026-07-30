@@ -3,17 +3,21 @@ from __future__ import annotations
 from collections import defaultdict
 
 from .model import (
+    CompilationMetrics,
     Diagnostic,
     LayoutResult,
+    Project,
     RegionPack,
     SynthesisResult,
 )
 
 
 def run_drc(
+    project: Project,
     pack: RegionPack,
     synthesis: SynthesisResult,
     layout: LayoutResult,
+    metrics: CompilationMetrics,
 ) -> list[Diagnostic]:
     diagnostics: list[Diagnostic] = []
 
@@ -33,6 +37,53 @@ def run_drc(
                 "POWER_BUDGET_OK",
                 f"Power usage is {synthesis.total_power:.1f} / "
                 f"{pack.grid.max_power:.1f}.",
+            )
+        )
+
+    constraints = project.constraints
+    if (
+        constraints.max_power is not None
+        and synthesis.total_power > constraints.max_power
+    ):
+        diagnostics.append(
+            Diagnostic(
+                "error",
+                "PROJECT_POWER_CONSTRAINT_EXCEEDED",
+                f"Required power {synthesis.total_power:.1f} exceeds project "
+                f"constraint {constraints.max_power:.1f}.",
+            )
+        )
+    if (
+        constraints.max_devices is not None
+        and metrics.device_count > constraints.max_devices
+    ):
+        diagnostics.append(
+            Diagnostic(
+                "error",
+                "PROJECT_DEVICE_CONSTRAINT_EXCEEDED",
+                f"Layout uses {metrics.device_count} devices, above project "
+                f"constraint {constraints.max_devices}.",
+            )
+        )
+    if (
+        constraints.max_route_tiles is not None
+        and metrics.route_tiles > constraints.max_route_tiles
+    ):
+        diagnostics.append(
+            Diagnostic(
+                "error",
+                "PROJECT_ROUTE_CONSTRAINT_EXCEEDED",
+                f"Layout uses {metrics.route_tiles} route tiles, above project "
+                f"constraint {constraints.max_route_tiles}.",
+            )
+        )
+    if metrics.area_utilization_percent > 85.0:
+        diagnostics.append(
+            Diagnostic(
+                "warning",
+                "HIGH_AREA_UTILIZATION",
+                f"Layout uses {metrics.area_utilization_percent:.1f}% of "
+                "buildable tiles; later routing changes may be difficult.",
             )
         )
 

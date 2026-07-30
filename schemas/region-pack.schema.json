@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/xianyuekz/endfield-factory-compiler/main/schemas/region-pack.schema.json",
+  "title": "Endfield Factory Compiler region pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "version",
+    "grid",
+    "logistics",
+    "items",
+    "devices",
+    "recipes"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "grid": {
+      "$ref": "#/$defs/grid"
+    },
+    "logistics": {
+      "$ref": "#/$defs/logistics"
+    },
+    "items": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "devices": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/device"
+      }
+    },
+    "recipes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/recipe"
+      }
+    }
+  },
+  "$defs": {
+    "positiveNumber": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "rectangle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "y": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "height": {
+          "$ref": "#/$defs/positiveInteger"
+        }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "max_power"
+      ],
+      "properties": {
+        "width": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "height": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "max_power": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "obstacles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rectangle"
+          },
+          "default": []
+        }
+      }
+    },
+    "logistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tile_capacity_per_minute"
+      ],
+      "properties": {
+        "tile_capacity_per_minute": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "allow_crossings": {
+          "type": "boolean",
+          "default": false
+        },
+        "crossing_penalty": {
+          "type": "number",
+          "minimum": 0,
+          "default": 8
+        },
+        "bend_penalty": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0.4
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "power"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "width": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "height": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "power": {
+          "$ref": "#/$defs/positiveNumber"
+        }
+      }
+    },
+    "recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device",
+        "cycle_seconds",
+        "inputs",
+        "output"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cycle_seconds": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/positiveNumber"
+          }
+        },
+        "output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "item",
+            "amount"
+          ],
+          "properties": {
+            "item": {
+              "type": "string",
+              "minLength": 1
+            },
+            "amount": {
+              "$ref": "#/$defs/positiveNumber"
+            }
+          }
+        }
+      }
+    }
+  }
+}

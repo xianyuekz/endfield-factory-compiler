@@ -4,6 +4,7 @@ import hashlib
 import html
 
 from .model import (
+    CompilationMetrics,
     Diagnostic,
     LayoutResult,
     Project,
@@ -27,6 +28,7 @@ def render_svg(
     pack: RegionPack,
     synthesis: SynthesisResult,
     layout: LayoutResult,
+    metrics: CompilationMetrics,
     diagnostics: list[Diagnostic],
 ) -> str:
     cell = 18
@@ -38,6 +40,7 @@ def render_svg(
     width = left + grid_width + panel + 32
     height = top + grid_height + 36
     error_count = sum(item.severity == "error" for item in diagnostics)
+    power_limit = project.constraints.max_power or pack.grid.max_power
 
     parts = [
         '<?xml version="1.0" encoding="UTF-8"?>',
@@ -76,7 +79,9 @@ def render_svg(
             f'<text x="{left}" y="54" fill="#94a3b8" font-size="12" '
             f'font-family="Inter,Segoe UI,sans-serif">'
             f"{html.escape(pack.name)} · {len(layout.devices)} devices · "
-            f"{len(layout.routes)} routes · {error_count} DRC errors</text>"
+            f"{len(layout.routes)} routes · "
+            f"{metrics.area_utilization_percent:.1f}% area · "
+            f"{error_count} DRC errors</text>"
         ),
         (
             f'<rect x="{left}" y="{top}" width="{grid_width}" '
@@ -153,11 +158,17 @@ def render_svg(
             (
                 f'<text x="{panel_x}" y="{top + 45}" fill="#94a3b8" '
                 'font-size="11" font-family="Inter,Segoe UI,sans-serif">'
-                f"Power: {synthesis.total_power:.1f} / {pack.grid.max_power:.1f}</text>"
+                f"Power: {synthesis.total_power:.1f} / {power_limit:.1f}</text>"
+            ),
+            (
+                f'<text x="{panel_x}" y="{top + 61}" fill="#94a3b8" '
+                'font-size="11" font-family="Inter,Segoe UI,sans-serif">'
+                f"Area: {metrics.used_tiles} / {metrics.buildable_tiles} tiles · "
+                f"Routes: {metrics.route_tiles} tiles</text>"
             ),
         ]
     )
-    panel_y = top + 70
+    panel_y = top + 88
     for node in synthesis.nodes:
         parts.extend(
             [
@@ -207,4 +218,3 @@ def render_svg(
     )
     parts.append("</svg>")
     return "\n".join(parts)
-
