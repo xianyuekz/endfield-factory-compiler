@@ -6,24 +6,32 @@
 
 | Metric | Value |
 | --- | ---: |
-| DRC | **PASS** (0 errors, 0 warnings) |
+| DRC | **PASS** (0 errors, 1 warnings) |
 | Region pack | `valley-iv-research` 0.1.0 |
 | Devices | 28 |
 | Device footprint | 391 tiles |
 | Logistics routes | 43 |
-| Unique route tiles | 351 |
-| Total routed length | 797 tiles |
-| Route bends | 56 |
-| Crossing tiles | 10 |
+| Unique route tiles | 280 |
+| Total routed length | 1044 tiles |
+| Route bends | 122 |
+| Crossing tiles | 199 |
+| Bounding box | 41 x 17 = 697 tiles |
+| Bounding box utilization | 96.3% |
 | Router | `serial-compact-grid-astar` |
 | Router jobs | 1 / 1 effective/requested |
-| A* expanded states | 40178 |
-| Peak A* frontier | 752 |
-| Routing time | 65.29 ms |
-| Routing CPU time | 46.88 ms |
-| Observed core equivalents | 0.72 |
-| Area utilization | 7.3% |
+| A* expanded states | 11711 |
+| Peak A* frontier | 65 |
+| Routing time | 21.87 ms |
+| Routing CPU time | 15.62 ms |
+| Observed core equivalents | n/a (sample too short) |
+| Area utilization | 96.3% |
 | Power | 604 / 1800 |
+| Floorplan strategy | `compact-first-fit` |
+| Floorplan candidates tested | 815 |
+| Floorplan lower-bound area | 391 tiles |
+| Floorplan baseline area | 3660 tiles |
+| Floorplan selected area | 697 tiles |
+| Floorplan minimum proven | yes, for current strategy |
 
 ## Targets
 
@@ -60,10 +68,11 @@
 | --- | ---: | ---: |
 | Power | 900 | 604 |
 | Devices | 36 | 28 |
-| Route tiles | 1200 | 351 |
+| Route tiles | 1200 | 280 |
 
 ## Diagnostics
 
 - [INFO] `POWER_BUDGET_OK` - Power usage is 604.0 / 1800.0.
-- [INFO] `ROUTE_CROSSINGS` - 10 logistics crossing(s) use the region's abstract bridge capability.
-- [INFO] `DRC_SUMMARY` - DRC completed with 0 error(s) and 0 warning(s).
+- [WARN] `HIGH_AREA_UTILIZATION` - Layout uses 96.3% of buildable tiles; later routing changes may be difficult.
+- [INFO] `ROUTE_CROSSINGS` - 199 logistics crossing(s) use the region's abstract bridge capability.
+- [INFO] `DRC_SUMMARY` - DRC completed with 0 error(s) and 1 warning(s).

@@ -8,6 +8,8 @@ from pathlib import Path
 from . import __version__
 from .compiler import compile_project
 from .execution import ExecutionOptions
+from .floorplan import FloorplanSearchError
+from .model import FloorplanSearchOptions
 from .pack import load_project, load_region_pack
 from .placement import PlacementError
 from .render import render_svg
@@ -57,6 +59,21 @@ def _parser() -> argparse.ArgumentParser:
         metavar="SECONDS",
         help="Soft routing time limit in seconds",
     )
+    compile_command.add_argument(
+        "--min-area",
+        action="store_true",
+        help=(
+            "Search for the smallest feasible routed bounding box using the "
+            "current compact floorplanning strategy"
+        ),
+    )
+    compile_command.add_argument(
+        "--floorplan-max-candidates",
+        type=int,
+        default=1000,
+        metavar="N",
+        help="Maximum candidate rectangles tested by --min-area (default: 1000)",
+    )
 
     validate_command = commands.add_parser(
         "validate-pack", help="Validate a region pack"
@@ -78,6 +95,8 @@ def _compile(
     jobs: int,
     seed: int,
     time_limit: float | None,
+    min_area: bool,
+    floorplan_max_candidates: int,
 ) -> int:
     project = load_project(project_path)
     pack = load_region_pack(project.region_pack_path)
@@ -86,7 +105,11 @@ def _compile(
         seed=seed,
         time_limit_seconds=time_limit,
     )
-    result = compile_project(project, pack, options=options)
+    floorplan = FloorplanSearchOptions(
+        enabled=min_area,
+        max_candidates=floorplan_max_candidates,
+    )
+    result = compile_project(project, pack, options=options, floorplan=floorplan)
 
     output.mkdir(parents=True, exist_ok=True)
     plan_path = output / "plan.json"
@@ -119,8 +142,18 @@ def _compile(
     )
     print(
         f"  {result.synthesis.total_power:.1f} power, "
-        f"{result.metrics.area_utilization_percent:.1f}% area"
+        f"{result.metrics.area_utilization_percent:.1f}% area, "
+        f"{result.metrics.bounding_box_width}x"
+        f"{result.metrics.bounding_box_height} bounding box"
     )
+    if result.floorplan_search is not None:
+        search = result.floorplan_search
+        print(
+            f"  Floorplan: {search.selected_width}x{search.selected_height} "
+            f"({search.selected_area} tiles), "
+            f"{search.candidates_tested} candidate(s), "
+            f"lower bound {search.lower_bound_area}"
+        )
     print(
         f"  Router: {result.routing_stats.backend_name}, "
         f"{result.routing_stats.effective_jobs}/"
@@ -145,6 +178,8 @@ def main(argv: list[str] | None = None) -> int:
                 jobs=args.jobs,
                 seed=args.seed,
                 time_limit=args.time_limit,
+                min_area=args.min_area,
+                floorplan_max_candidates=args.floorplan_max_candidates,
             )
         if args.command == "validate-pack":
             pack = load_region_pack(args.pack)
@@ -163,7 +198,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"{sum(node.machine_count for node in synthesis.nodes)} devices"
             )
             return 0
-    except (PlacementError, ValueError) as exc:
+    except (FloorplanSearchError, PlacementError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     return 2

@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import json
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
@@ -54,6 +55,32 @@ class CliTests(unittest.TestCase):
             self.assertEqual(status, 0)
             self.assertIn("1/4 jobs", output.getvalue())
             self.assertIn("0 error(s), 1 warning(s)", output.getvalue())
+
+    def test_compile_can_search_min_area_floorplan(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = StringIO()
+            with redirect_stdout(output):
+                status = main(
+                    [
+                        "compile",
+                        str(PROJECT),
+                        "--out",
+                        directory,
+                        "--min-area",
+                        "--floorplan-max-candidates",
+                        "200",
+                    ]
+                )
+            self.assertEqual(status, 0)
+            self.assertIn("Floorplan:", output.getvalue())
+            plan = json.loads(
+                (Path(directory) / "plan.json").read_text(encoding="utf-8")
+            )
+            self.assertTrue(plan["floorplan_search"]["enabled"])
+            self.assertLessEqual(
+                plan["floorplan_search"]["selected_area"],
+                plan["floorplan_search"]["baseline_area"],
+            )
 
 
 if __name__ == "__main__":

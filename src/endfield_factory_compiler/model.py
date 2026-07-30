@@ -91,6 +91,27 @@ class ProjectConstraints:
     max_route_tiles: int | None = None
 
 
+@dataclass(frozen=True)
+class FloorplanSearchOptions:
+    enabled: bool = False
+    max_candidates: int = 1000
+    strategy: str = "compact-first-fit"
+
+
+@dataclass(frozen=True)
+class FloorplanSearchResult:
+    enabled: bool
+    strategy: str
+    lower_bound_area: int
+    baseline_area: int
+    candidates_tested: int
+    feasible: bool
+    proven_minimum_for_strategy: bool
+    selected_width: int
+    selected_height: int
+    selected_area: int
+
+
 @dataclass
 class SynthesisNode:
     recipe_id: str
@@ -172,6 +193,10 @@ class CompilationMetrics:
     crossing_tiles: int
     buildable_tiles: int
     used_tiles: int
+    bounding_box_width: int
+    bounding_box_height: int
+    bounding_box_area: int
+    bounding_box_utilization_percent: float
     area_utilization_percent: float
     power_utilization_percent: float
     raw_input_rate_per_minute: float

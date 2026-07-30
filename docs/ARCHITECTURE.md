@@ -33,6 +33,8 @@ project.json             region.json
 - `execution.py` owns cross-backend resource and reproducibility settings.
 - `synthesis.py` expands target rates into a DAG and maps recipes to devices.
 - `placement.py` performs deterministic, obstacle-aware column placement.
+- `floorplan.py` performs optional minimum-area rectangle search using compact
+  placement, routing and DRC as the feasibility oracle.
 - `routing.py` splits flow across producer capacity, then connects device ports
   using grid-based A*.
 - `routing_backend.py` defines the replaceable backend and telemetry contracts.
@@ -47,8 +49,8 @@ project.json             region.json
 
 The Python package remains dependency-free. Its compact A* router prices
 congestion, incompatible crossings and bends while remaining deterministic.
-Native, CP-SAT, MILP or PathFinder backends should be optional and should
-consume/produce the same intermediate models.
+Native, CP-SAT, MILP, PathFinder or annealing-style backends should be optional
+and should consume/produce the same intermediate models.
 
 All backends receive `ExecutionOptions`; no stage may create an unbudgeted
 nested worker pool. See [the performance guide](PERFORMANCE.md).
@@ -80,6 +82,7 @@ add:
 
 - MILP/CP-SAT recipe selection and machine allocation
 - standard-cell or module-based placement
+- exact/heuristic floorplanning with rotations and explicit ports
 - analytical global placement followed by legalization
 - negotiated-congestion routing
 - tick-based throughput simulation

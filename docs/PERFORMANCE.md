@@ -68,6 +68,22 @@ silently pretending to use multiple cores.
 
 Every `plan.json` and Markdown report contains this telemetry.
 
+## Floorplan search cost
+
+`efc compile --min-area` is a higher-level optimization loop. It tests candidate
+rectangles in area order and uses placement, routing and DRC as the feasibility
+oracle. This makes the result meaningful, but it also means one compile may run
+hundreds of routing attempts.
+
+The HC Valley Battery acceptance target currently tests 815 candidate
+rectangles and selects a 41 x 17 routed bounding box. This is intentionally kept
+small enough for CI while still exercising the same bottlenecks as a real
+floorplanner.
+
+Future parallel work should treat independent candidate rectangles and
+multi-start placement attempts as coarse deterministic jobs before attempting
+fine-grained parallel A*.
+
 ## Backend boundary
 
 Alternative routers implement `RouterBackend`:

@@ -7,8 +7,8 @@ unbuildable plan. It is intentionally narrower than a feature wish list.
 
 - [x] Split physical flow across producer devices and check per-device input
   and output rates (`v0.2.1`).
-- [ ] Accumulate same-item flow on shared route tiles and reject aggregate
-  throughput above tile capacity.
+- [x] Accumulate same-item flow on shared route tiles and reject aggregate
+  throughput above tile capacity (`v0.4.3`).
 - [ ] Promote the HC Valley Battery example from a research fixture into a
   stricter acceptance test once official/redistributable data is available.
 
@@ -20,6 +20,8 @@ unbuildable plan. It is intentionally narrower than a feature wish list.
   capacity and an abstract crossing flag.
 - [ ] Feed routing failures and congestion back into placement instead of using
   a one-way pipeline.
+- [ ] Replace origin-anchored compact first-fit floorplanning with a pluggable
+  legalizer that supports rotations, explicit ports and module templates.
 - [ ] Add an install/list/resolve workflow for versioned region packs.
 
 ## P2 — synthesis-model gaps
@@ -33,6 +35,8 @@ unbuildable plan. It is intentionally narrower than a feature wish list.
 
 - [x] Add a first non-toy research fixture that compiles HC Valley Battery
   placement/routing without requiring official game assets (`v0.4.2`).
+- [x] Add a minimum-area floorplan mode and HC Valley Battery acceptance target
+  (`v0.4.3`).
 - [ ] Add a community-maintained, legally redistributable real-data pack.
 - [ ] Add a local visual project editor without introducing an online service.
 - [ ] Add a blueprint adapter only if a documented and permitted format becomes

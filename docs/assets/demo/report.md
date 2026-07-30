@@ -11,18 +11,20 @@
 | Devices | 13 |
 | Device footprint | 156 tiles |
 | Logistics routes | 25 |
-| Unique route tiles | 202 |
-| Total routed length | 351 tiles |
-| Route bends | 38 |
-| Crossing tiles | 7 |
+| Unique route tiles | 199 |
+| Total routed length | 367 tiles |
+| Route bends | 42 |
+| Crossing tiles | 10 |
+| Bounding box | 33 x 29 = 957 tiles |
+| Bounding box utilization | 37.1% |
 | Router | `serial-compact-grid-astar` |
 | Router jobs | 1 / 1 effective/requested |
-| A* expanded states | 4516 |
-| Peak A* frontier | 210 |
-| Routing time | 7.66 ms |
+| A* expanded states | 4016 |
+| Peak A* frontier | 274 |
+| Routing time | 7.80 ms |
 | Routing CPU time | 15.62 ms |
 | Observed core equivalents | n/a (sample too short) |
-| Area utilization | 16.7% |
+| Area utilization | 16.6% |
 | Power | 304 / 600 |
 
 ## Targets
@@ -55,10 +57,10 @@
 | --- | ---: | ---: |
 | Power | 400 | 304 |
 | Devices | 16 | 13 |
-| Route tiles | 240 | 202 |
+| Route tiles | 240 | 199 |
 
 ## Diagnostics
 
 - [INFO] `POWER_BUDGET_OK` - Power usage is 304.0 / 600.0.
-- [INFO] `ROUTE_CROSSINGS` - 7 logistics crossing(s) use the region's abstract bridge capability.
+- [INFO] `ROUTE_CROSSINGS` - 10 logistics crossing(s) use the region's abstract bridge capability.
 - [INFO] `DRC_SUMMARY` - DRC completed with 0 error(s) and 0 warning(s).

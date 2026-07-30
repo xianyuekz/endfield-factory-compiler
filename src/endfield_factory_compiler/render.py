@@ -166,9 +166,16 @@ def render_svg(
                 f"Area: {metrics.used_tiles} / {metrics.buildable_tiles} tiles · "
                 f"Routes: {metrics.route_tiles} tiles</text>"
             ),
+            (
+                f'<text x="{panel_x}" y="{top + 77}" fill="#94a3b8" '
+                'font-size="11" font-family="Inter,Segoe UI,sans-serif">'
+                f"Box: {metrics.bounding_box_width}x"
+                f"{metrics.bounding_box_height} = "
+                f"{metrics.bounding_box_area} tiles</text>"
+            ),
         ]
     )
-    panel_y = top + 88
+    panel_y = top + 104
     for node in synthesis.nodes:
         parts.extend(
             [

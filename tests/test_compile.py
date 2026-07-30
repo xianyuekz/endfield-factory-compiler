@@ -6,8 +6,14 @@ from pathlib import Path
 from endfield_factory_compiler.compiler import compile_project
 from endfield_factory_compiler.drc import run_drc
 from endfield_factory_compiler.metrics import calculate_metrics
-from endfield_factory_compiler.model import ProjectConstraints
+from endfield_factory_compiler.model import (
+    FloorplanSearchOptions,
+    GridSpec,
+    ProjectConstraints,
+    Route,
+)
 from endfield_factory_compiler.pack import load_project, load_region_pack
+from endfield_factory_compiler.placement import PlacementError
 from endfield_factory_compiler.render import render_svg
 from endfield_factory_compiler.report import render_markdown
 
@@ -111,6 +117,38 @@ class CompilationTests(unittest.TestCase):
         self.assertIn("**PASS**", report)
         self.assertIn("HC Valley Battery", report)
 
+    def test_hc_valley_battery_min_area_floorplan(self):
+        project = load_project(HC_VALLEY_BATTERY_PROJECT)
+        pack = load_region_pack(project.region_pack_path)
+        baseline = compile_project(project, pack)
+        result = compile_project(
+            project,
+            pack,
+            floorplan=FloorplanSearchOptions(enabled=True, max_candidates=900),
+        )
+
+        errors = [
+            diagnostic
+            for diagnostic in result.diagnostics
+            if diagnostic.severity == "error"
+        ]
+        self.assertEqual(errors, [])
+        self.assertTrue(all(route.routed for route in result.layout.routes))
+        self.assertIsNotNone(result.floorplan_search)
+        search = result.floorplan_search
+        assert search is not None
+        self.assertTrue(search.feasible)
+        self.assertTrue(search.proven_minimum_for_strategy)
+        self.assertEqual(search.lower_bound_area, 391)
+        self.assertEqual(search.selected_width, 41)
+        self.assertEqual(search.selected_height, 17)
+        self.assertEqual(search.selected_area, 697)
+        self.assertLess(
+            result.metrics.bounding_box_area,
+            baseline.metrics.bounding_box_area,
+        )
+        self.assertEqual(result.metrics.bounding_box_area, search.selected_area)
+
     def test_project_constraints_are_checked(self):
         project = load_project(PROJECT)
         project = replace(
@@ -136,6 +174,35 @@ class CompilationTests(unittest.TestCase):
                 "PROJECT_ROUTE_CONSTRAINT_EXCEEDED",
             },
         )
+
+    def test_min_area_can_rescue_a_region_too_small_for_column_placement(self):
+        project = load_project(PROJECT)
+        pack = load_region_pack(project.region_pack_path)
+        constrained_pack = replace(
+            pack,
+            grid=GridSpec(
+                width=15,
+                height=24,
+                max_power=pack.grid.max_power,
+                obstacles=(),
+            ),
+        )
+        with self.assertRaises(PlacementError):
+            compile_project(project, constrained_pack)
+
+        result = compile_project(
+            project,
+            constrained_pack,
+            floorplan=FloorplanSearchOptions(enabled=True, max_candidates=300),
+        )
+        errors = [
+            diagnostic
+            for diagnostic in result.diagnostics
+            if diagnostic.severity == "error"
+        ]
+        self.assertEqual(errors, [])
+        self.assertEqual(result.metrics.bounding_box_width, 14)
+        self.assertEqual(result.metrics.bounding_box_height, 24)
 
     def test_physical_flow_respects_each_machine_capacity(self):
         project = load_project(PROJECT)
@@ -196,6 +263,35 @@ class CompilationTests(unittest.TestCase):
         )
         self.assertIn(
             "PRODUCER_CAPACITY_EXCEEDED",
+            {diagnostic.code for diagnostic in diagnostics},
+        )
+
+    def test_drc_rejects_aggregate_route_tile_capacity(self):
+        project = load_project(PROJECT)
+        pack = load_region_pack(project.region_pack_path)
+        result = compile_project(project, pack)
+        route = next(route for route in result.layout.routes if len(route.points) > 2)
+        result.layout.routes.append(
+            Route(
+                id="overloaded-shared-tile",
+                item=route.item,
+                source=route.source,
+                sink=route.sink,
+                required_rate=route.capacity,
+                capacity=route.capacity,
+                points=list(route.points),
+            )
+        )
+        metrics = calculate_metrics(pack, result.synthesis, result.layout)
+        diagnostics = run_drc(
+            project,
+            pack,
+            result.synthesis,
+            result.layout,
+            metrics,
+        )
+        self.assertIn(
+            "ROUTE_TILE_CAPACITY_EXCEEDED",
             {diagnostic.code for diagnostic in diagnostics},
         )
 

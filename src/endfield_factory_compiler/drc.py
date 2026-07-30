@@ -148,6 +148,7 @@ def run_drc(
             occupied[cell] = device.id
 
     route_cells: dict[tuple[int, int], set[str]] = defaultdict(set)
+    route_item_loads: dict[tuple[tuple[int, int], str], float] = defaultdict(float)
     outgoing_rates: dict[str, float] = defaultdict(float)
     incoming_rates: dict[tuple[str, str], float] = defaultdict(float)
     for route in layout.routes:
@@ -172,7 +173,7 @@ def run_drc(
                     f"its {route.capacity:.2f}/min capacity.",
                 )
             )
-        for point in route.points:
+        for point in set(route.points):
             if point in occupied:
                 diagnostics.append(
                     Diagnostic(
@@ -182,6 +183,22 @@ def run_drc(
                     )
                 )
             route_cells[point].add(route.item)
+        # Endpoint cells are inferred schema-v1 ports. Aggregate tile capacity
+        # is enforced on the logistics trunk between ports.
+        for point in set(route.points[1:-1]):
+            route_item_loads[(point, route.item)] += route.required_rate
+
+    for (point, item), load in route_item_loads.items():
+        if load > pack.logistics.tile_capacity_per_minute + 1e-9:
+            diagnostics.append(
+                Diagnostic(
+                    "error",
+                    "ROUTE_TILE_CAPACITY_EXCEEDED",
+                    f"Routes carry {load:.2f}/min of {item} through {point}, "
+                    f"above tile capacity "
+                    f"{pack.logistics.tile_capacity_per_minute:.2f}/min.",
+                )
+            )
 
     for device_id, assigned_rate in outgoing_rates.items():
         device = devices_by_id[device_id]

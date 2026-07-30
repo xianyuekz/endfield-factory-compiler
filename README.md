@@ -50,7 +50,9 @@ efc compile examples/control-core.json --out build/demo
 
 efc validate-pack region-packs/valley-iv-research/region.json
 efc validate-project examples/hc-valley-battery.json
-efc compile examples/hc-valley-battery.json --out build/hc-valley-battery
+efc compile examples/hc-valley-battery.json \
+  --out build/hc-valley-battery \
+  --min-area
 ```
 
 Open `build/demo/layout.svg` in a browser. The machine-readable physical plan
@@ -77,10 +79,11 @@ Projects may also set hard limits for power, device count and unique logistics
 tiles. See [the project format](docs/PROJECTS.md).
 
 The first non-toy example is documented in
-[HC Valley Battery](docs/HC_VALLEY_BATTERY.md). It currently emits an SVG,
-JSON physical plan and Markdown report; official in-game blueprint-code export
-is intentionally left behind an adapter boundary until the format is documented
-and permitted to support.
+[HC Valley Battery](docs/HC_VALLEY_BATTERY.md). With `--min-area`, the current
+strategy compacts that design into a 41 x 17 routed bounding box. It currently
+emits an SVG, JSON physical plan and Markdown report; official in-game
+blueprint-code export is intentionally left behind an adapter boundary until
+the format is documented and permitted to support.
 
 ## Current scope
 
@@ -90,9 +93,11 @@ Implemented:
 - power-budget calculation
 - data-driven devices, recipes, grid obstacles and logistics capabilities
 - deterministic column placement with obstacle avoidance
+- optional minimum-area floorplan search with compact placement legalization
 - congestion-aware A* routing with crossing and bend costs
 - capacity-aware many-to-many flow allocation between physical devices
-- DRC for bounds, overlap, power, per-device flow, route capacity and connectivity
+- DRC for bounds, overlap, power, per-device flow, aggregate route capacity
+  and connectivity
 - project-level power, device-count and route-tile constraints
 - physical metrics for footprint, utilization, route length, bends and crossings
 - JSON Schema files for editor validation and autocomplete
@@ -123,6 +128,7 @@ Release changes are recorded in the [changelog](CHANGELOG.md).
 Known correctness gaps are ordered in the [roadmap](docs/ROADMAP.md).
 Engineering checks are listed in [quality gates](docs/QUALITY.md), and larger
 technical choices are recorded as [architecture decisions](docs/adr).
+The minimum-area flow is explained in [floorplanning](docs/FLOORPLANNING.md).
 
 ## Performance contract
 

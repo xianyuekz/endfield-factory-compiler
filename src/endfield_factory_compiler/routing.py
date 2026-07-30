@@ -80,8 +80,10 @@ def _astar(
     width: int,
     height: int,
     blocked: set[int],
-    route_occupancy: dict[int, set[str]],
+    route_loads: dict[int, dict[str, float]],
     item: str,
+    required_rate: float,
+    tile_capacity: float,
     allow_crossings: bool,
     crossing_penalty: float,
     bend_penalty: float,
@@ -147,7 +149,16 @@ def _astar(
             neighbor = neighbor_y * width + neighbor_x
             if neighbor in blocked:
                 continue
-            occupied_items = route_occupancy.get(neighbor)
+            occupied_rates = route_loads.get(neighbor)
+            occupied_items = set(occupied_rates) if occupied_rates else None
+            same_item_load = (
+                occupied_rates.get(item, 0.0) if occupied_rates is not None else 0.0
+            )
+            if (
+                neighbor != goal
+                and same_item_load + required_rate > tile_capacity + 1e-9
+            ):
+                continue
             has_same_item = (
                 occupied_items is not None and item in occupied_items
             )
@@ -249,7 +260,7 @@ def _route_serial(
         for cell in rect.cells()
     }
     hard_blocked = device_cells | obstacle_cells
-    route_occupancy: dict[int, set[str]] = defaultdict(set)
+    route_loads: dict[int, dict[str, float]] = defaultdict(lambda: defaultdict(float))
     producers: dict[str, list[PlacedDevice]] = defaultdict(list)
     consumers_by_recipe: dict[str, list[PlacedDevice]] = defaultdict(list)
     producer_remaining: dict[str, float] = {}
@@ -313,7 +324,8 @@ def _route_serial(
                     if not pack.logistics.allow_crossings:
                         route_blocked |= {
                             point
-                            for point, occupied_items in route_occupancy.items()
+                            for point, occupied_rates in route_loads.items()
+                            for occupied_items in [set(occupied_rates)]
                             if occupied_items - {item}
                         }
                     if source_device is not None:
@@ -346,8 +358,10 @@ def _route_serial(
                             width,
                             height,
                             blocked,
-                            route_occupancy,
+                            route_loads,
                             item,
+                            allocated_rate,
+                            pack.logistics.tile_capacity_per_minute,
                             pack.logistics.allow_crossings,
                             pack.logistics.crossing_penalty,
                             pack.logistics.bend_penalty,
@@ -370,8 +384,11 @@ def _route_serial(
                         stats.timed_out or search_result.timed_out
                     )
                     if search_result.cell_ids:
-                        for cell_id in search_result.cell_ids:
-                            route_occupancy[cell_id].add(item)
+                        # Endpoint cells are inferred device/external ports in
+                        # schema v1, not ordinary logistics tiles. Limit shared
+                        # throughput on the routed trunk between those ports.
+                        for cell_id in set(search_result.cell_ids[1:-1]):
+                            route_loads[cell_id][item] += allocated_rate
                     points = [
                         _cell_point(cell_id, width)
                         for cell_id in search_result.cell_ids

@@ -32,6 +32,22 @@ def calculate_metrics(
 
     buildable_tiles = pack.grid.width * pack.grid.height - len(obstacle_cells)
     used_tiles = len((device_cells | route_cells) - obstacle_cells)
+    bounded_cells = (device_cells | route_cells) - obstacle_cells
+    if bounded_cells:
+        min_x = min(x for x, _ in bounded_cells)
+        max_x = max(x for x, _ in bounded_cells)
+        min_y = min(y for _, y in bounded_cells)
+        max_y = max(y for _, y in bounded_cells)
+        bounding_box_width = max_x - min_x + 1
+        bounding_box_height = max_y - min_y + 1
+        bounding_box_area = bounding_box_width * bounding_box_height
+    else:
+        bounding_box_width = 0
+        bounding_box_height = 0
+        bounding_box_area = 0
+    bounding_box_utilization = (
+        100.0 * used_tiles / bounding_box_area if bounding_box_area else 0.0
+    )
     utilization = 100.0 * used_tiles / buildable_tiles if buildable_tiles else 0.0
     power_utilization = (
         100.0 * synthesis.total_power / pack.grid.max_power
@@ -48,6 +64,10 @@ def calculate_metrics(
         crossing_tiles=sum(len(items) > 1 for items in route_items.values()),
         buildable_tiles=buildable_tiles,
         used_tiles=used_tiles,
+        bounding_box_width=bounding_box_width,
+        bounding_box_height=bounding_box_height,
+        bounding_box_area=bounding_box_area,
+        bounding_box_utilization_percent=bounding_box_utilization,
         area_utilization_percent=utilization,
         power_utilization_percent=power_utilization,
         raw_input_rate_per_minute=sum(synthesis.source_rates.values()),

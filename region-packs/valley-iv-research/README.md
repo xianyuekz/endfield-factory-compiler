@@ -18,6 +18,10 @@ bus ports, thermal banks or in-game blueprint strings. This pack deliberately
 keeps the data narrow enough for the compiler's current synthesis, placement
 and routing pipeline.
 
+The logistics capacity is intentionally modeled as an abstract high-capacity
+bus tile (`120/min`) because schema v1 does not yet describe individual belt
+tiers, splitter/filter devices or multiple explicit ports per machine.
+
 Useful public references:
 
 - https://endfield.gg/recipes/tools_proc_battery_3_1/

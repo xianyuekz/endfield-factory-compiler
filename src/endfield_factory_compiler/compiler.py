@@ -2,20 +2,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .drc import run_drc
 from .execution import ExecutionOptions
-from .metrics import calculate_metrics
+from .floorplan import evaluate_floorplan, search_minimum_floorplan
 from .model import (
     CompilationMetrics,
     Diagnostic,
+    FloorplanSearchOptions,
+    FloorplanSearchResult,
     LayoutResult,
     Project,
     RegionPack,
     SynthesisResult,
     to_dict,
 )
-from .placement import place_devices
-from .routing import route_design
+from .placement import PlacementError, place_devices
 from .routing_backend import RouterBackend, RoutingStats
 from .synthesis import synthesize
 
@@ -30,6 +30,7 @@ class CompilationResult:
     diagnostics: list[Diagnostic]
     execution_options: ExecutionOptions
     routing_stats: RoutingStats
+    floorplan_search: FloorplanSearchResult | None = None
 
     @property
     def has_errors(self) -> bool:
@@ -54,6 +55,7 @@ class CompilationResult:
             "layout": to_dict(self.layout),
             "metrics": to_dict(self.metrics),
             "routing_stats": to_dict(self.routing_stats),
+            "floorplan_search": to_dict(self.floorplan_search),
             "diagnostics": to_dict(self.diagnostics),
         }
 
@@ -63,35 +65,55 @@ def compile_project(
     pack: RegionPack,
     *,
     options: ExecutionOptions | None = None,
+    floorplan: FloorplanSearchOptions | None = None,
     router: RouterBackend | None = None,
 ) -> CompilationResult:
     selected_options = options or ExecutionOptions()
+    floorplan_options = floorplan or FloorplanSearchOptions()
     synthesis = synthesize(pack, project.targets)
-    devices = place_devices(pack, synthesis)
-    routing = route_design(
-        pack,
-        synthesis,
-        devices,
-        options=selected_options,
-        backend=router,
-    )
-    layout = LayoutResult(devices=devices, routes=routing.routes)
-    metrics = calculate_metrics(pack, synthesis, layout)
-    diagnostics = run_drc(
-        project,
-        pack,
-        synthesis,
-        layout,
-        metrics,
-        routing.stats,
-    )
+    baseline = None
+    if not floorplan_options.enabled:
+        devices = place_devices(pack, synthesis)
+        baseline = evaluate_floorplan(
+            project,
+            pack,
+            synthesis,
+            devices,
+            selected_options,
+            router,
+        )
+        selected = baseline
+    else:
+        try:
+            devices = place_devices(pack, synthesis)
+            baseline = evaluate_floorplan(
+                project,
+                pack,
+                synthesis,
+                devices,
+                selected_options,
+                router,
+            )
+        except PlacementError:
+            baseline = None
+        selected = search_minimum_floorplan(
+            project,
+            pack,
+            synthesis,
+            baseline,
+            search_options=floorplan_options,
+            execution_options=selected_options,
+            router=router,
+        )
+    assert selected is not None
     return CompilationResult(
         project=project,
-        pack=pack,
+        pack=selected.pack,
         synthesis=synthesis,
-        layout=layout,
-        metrics=metrics,
-        diagnostics=diagnostics,
+        layout=selected.layout,
+        metrics=selected.metrics,
+        diagnostics=selected.diagnostics,
         execution_options=selected_options,
-        routing_stats=routing.stats,
+        routing_stats=selected.routing.stats,
+        floorplan_search=selected.search,
     )

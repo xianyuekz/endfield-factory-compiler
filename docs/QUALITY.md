@@ -29,7 +29,9 @@ Before tagging a release, regenerate the demo artifacts:
 
 ```bash
 efc compile examples/control-core.json --out docs/assets/demo
-efc compile examples/hc-valley-battery.json --out docs/assets/hc-valley-battery
+efc compile examples/hc-valley-battery.json \
+  --out docs/assets/hc-valley-battery \
+  --min-area
 ```
 
 Then confirm:

@@ -725,59 +725,67 @@
           ],
           [
             0,
-            14
+            12
           ],
           [
             0,
-            15
+            11
+          ],
+          [
+            0,
+            10
           ],
           [
             1,
-            15
+            10
           ],
           [
             2,
-            15
+            10
           ],
           [
             3,
-            15
+            10
           ],
           [
             4,
-            15
+            10
           ],
           [
             5,
-            15
+            10
           ],
           [
             6,
-            15
+            10
+          ],
+          [
+            6,
+            11
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            13
           ],
           [
             7,
-            15
+            13
           ],
           [
             8,
-            15
+            13
           ],
           [
             9,
-            15
+            13
           ],
           [
             10,
-            15
-          ],
-          [
-            11,
-            15
-          ],
-          [
-            11,
-            14
+            13
           ],
           [
             11,
@@ -1106,48 +1114,48 @@
             16
           ],
           [
-            12,
-            16
-          ],
-          [
-            13,
-            16
-          ],
-          [
-            14,
-            16
-          ],
-          [
-            15,
-            16
-          ],
-          [
-            16,
-            16
-          ],
-          [
-            17,
-            16
-          ],
-          [
-            18,
-            16
-          ],
-          [
-            18,
+            11,
             15
           ],
           [
-            18,
+            11,
             14
           ],
           [
-            18,
+            11,
             13
           ],
           [
-            18,
+            11,
             12
+          ],
+          [
+            11,
+            11
+          ],
+          [
+            12,
+            11
+          ],
+          [
+            13,
+            11
+          ],
+          [
+            14,
+            11
+          ],
+          [
+            15,
+            11
+          ],
+          [
+            16,
+            11
+          ],
+          [
+            17,
+            11
           ],
           [
             18,
@@ -1946,44 +1954,100 @@
             8
           ],
           [
+            16,
+            7
+          ],
+          [
+            16,
+            6
+          ],
+          [
+            16,
+            5
+          ],
+          [
+            16,
+            4
+          ],
+          [
+            16,
+            3
+          ],
+          [
+            16,
+            2
+          ],
+          [
+            16,
+            1
+          ],
+          [
             17,
-            8
+            1
           ],
           [
             18,
-            8
+            1
           ],
           [
             19,
-            8
+            1
           ],
           [
             20,
-            8
+            1
           ],
           [
             21,
-            8
+            1
           ],
           [
             22,
-            8
+            1
           ],
           [
             23,
-            8
+            1
           ],
           [
             24,
-            8
+            1
           ],
           [
             25,
-            8
+            1
           ],
           [
             26,
-            8
+            1
+          ],
+          [
+            27,
+            1
+          ],
+          [
+            27,
+            2
+          ],
+          [
+            27,
+            3
+          ],
+          [
+            27,
+            4
+          ],
+          [
+            27,
+            5
+          ],
+          [
+            27,
+            6
+          ],
+          [
+            27,
+            7
           ],
           [
             27,
@@ -2008,60 +2072,60 @@
             12
           ],
           [
-            16,
-            11
-          ],
-          [
-            16,
-            10
-          ],
-          [
-            16,
-            9
-          ],
-          [
-            16,
-            8
-          ],
-          [
             17,
-            8
+            12
           ],
           [
             18,
-            8
+            12
           ],
           [
             19,
-            8
+            12
           ],
           [
             20,
-            8
+            12
           ],
           [
             21,
-            8
+            12
           ],
           [
             22,
-            8
+            12
           ],
           [
             23,
-            8
+            12
           ],
           [
             24,
-            8
+            12
           ],
           [
             25,
-            8
+            12
           ],
           [
             26,
-            8
+            12
+          ],
+          [
+            27,
+            12
+          ],
+          [
+            27,
+            11
+          ],
+          [
+            27,
+            10
+          ],
+          [
+            27,
+            9
           ],
           [
             27,
@@ -2075,13 +2139,17 @@
     "device_count": 13,
     "device_tiles": 156,
     "route_count": 25,
-    "route_tiles": 202,
-    "total_route_length": 351,
-    "route_bends": 38,
-    "crossing_tiles": 7,
+    "route_tiles": 199,
+    "total_route_length": 367,
+    "route_bends": 42,
+    "crossing_tiles": 10,
     "buildable_tiles": 2144,
-    "used_tiles": 358,
-    "area_utilization_percent": 16.69776119402985,
+    "used_tiles": 355,
+    "bounding_box_width": 33,
+    "bounding_box_height": 29,
+    "bounding_box_area": 957,
+    "bounding_box_utilization_percent": 37.09508881922675,
+    "area_utilization_percent": 16.557835820895523,
     "power_utilization_percent": 50.666666666666664,
     "raw_input_rate_per_minute": 80.0
   },
@@ -2095,16 +2163,17 @@
     "routes_completed": 25,
     "routes_failed": 0,
     "astar_calls": 25,
-    "expanded_states": 4516,
-    "generated_states": 6931,
-    "heap_pushes": 6931,
-    "peak_frontier": 210,
-    "total_path_length": 351,
-    "elapsed_seconds": 0.007663299998966977,
+    "expanded_states": 4016,
+    "generated_states": 6454,
+    "heap_pushes": 6454,
+    "peak_frontier": 274,
+    "total_path_length": 367,
+    "elapsed_seconds": 0.00780289999966044,
     "cpu_seconds": 0.015625,
     "observed_core_equivalents": null,
     "timed_out": false
   },
+  "floorplan_search": null,
   "diagnostics": [
     {
       "severity": "info",
@@ -2114,7 +2183,7 @@
     {
       "severity": "info",
       "code": "ROUTE_CROSSINGS",
-      "message": "7 logistics crossing(s) use the region's abstract bridge capability."
+      "message": "10 logistics crossing(s) use the region's abstract bridge capability."
     },
     {
       "severity": "info",

@@ -4,7 +4,9 @@ This example is the first end-to-end target that resembles a real Arknights:
 Endfield factory goal rather than a fictional toy item.
 
 ```bash
-efc compile examples/hc-valley-battery.json --out build/hc-valley-battery
+efc compile examples/hc-valley-battery.json \
+  --out build/hc-valley-battery \
+  --min-area
 ```
 
 The compiler will emit:
@@ -18,7 +20,9 @@ The checked-in snapshot is regenerated with the same command and lives under
 
 - 28 placed devices;
 - 43 routed logistics edges;
-- 351 unique route tiles;
+- 280 unique route tiles;
+- 41 x 17 routed bounding box;
+- 697 selected floorplan tiles;
 - 604 power in the research pack;
 - 0 DRC errors.
 
@@ -41,6 +45,18 @@ The research pack keeps source links beside the data in
 [`region-packs/valley-iv-research`](../region-packs/valley-iv-research). Treat
 those values as community research data, not an official export.
 
+## Minimum-area mode
+
+`--min-area` turns on deterministic floorplan search. For this project, the
+default readable placement has a 61 x 60 routed bounding box. The current
+compact first-fit strategy proves that 41 x 17 is the smallest feasible
+rectangle it can route under schema-v1 rules.
+
+This is a practical EDA-style acceptance target: changes to placement, routing
+or DRC should not silently regress this example back into a loose flowchart.
+It is still not a claim of global optimality across future rotations, explicit
+ports, splitter devices, multiple logistics tiers or human-designed modules.
+
 ## Current Limitations
 
 - no by-products;
@@ -48,7 +64,8 @@ those values as community research data, not an official export.
 - no depot bus or item-filter objects;
 - no thermal-bank consumption model;
 - inferred device ports rather than game-accurate rotated ports;
-- deterministic column placement rather than compact human-style modules.
+- compact first-fit floorplanning rather than human-style modules or a global
+  optimizer.
 
 These are now concrete blockers rather than abstract roadmap items, because the
 HC Valley Battery example exercises a large multi-branch recipe chain.

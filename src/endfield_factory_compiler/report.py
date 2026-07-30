@@ -40,6 +40,10 @@ def render_markdown(result: CompilationResult) -> str:
         f"| Total routed length | {metrics.total_route_length} tiles |",
         f"| Route bends | {metrics.route_bends} |",
         f"| Crossing tiles | {metrics.crossing_tiles} |",
+        f"| Bounding box | {metrics.bounding_box_width} x "
+        f"{metrics.bounding_box_height} = {metrics.bounding_box_area} tiles |",
+        f"| Bounding box utilization | "
+        f"{metrics.bounding_box_utilization_percent:.1f}% |",
         f"| Router | `{routing.backend_name}` |",
         f"| Router jobs | {routing.effective_jobs} / "
         f"{routing.requested_jobs} effective/requested |",
@@ -51,12 +55,33 @@ def render_markdown(result: CompilationResult) -> str:
         f"| Area utilization | {metrics.area_utilization_percent:.1f}% |",
         f"| Power | {_number(result.synthesis.total_power)} / "
         f"{_number(pack.grid.max_power)} |",
-        "",
-        "## Targets",
-        "",
-        "| Item | Required rate |",
-        "| --- | ---: |",
     ]
+    if result.floorplan_search is not None:
+        search = result.floorplan_search
+        proof = (
+            "yes, for current strategy"
+            if search.proven_minimum_for_strategy
+            else "no, candidate budget reached"
+        )
+        lines.extend(
+            [
+                f"| Floorplan strategy | `{search.strategy}` |",
+                f"| Floorplan candidates tested | {search.candidates_tested} |",
+                f"| Floorplan lower-bound area | {search.lower_bound_area} tiles |",
+                f"| Floorplan baseline area | {search.baseline_area} tiles |",
+                f"| Floorplan selected area | {search.selected_area} tiles |",
+                f"| Floorplan minimum proven | {proof} |",
+            ]
+        )
+    lines.extend(
+        [
+            "",
+            "## Targets",
+            "",
+            "| Item | Required rate |",
+            "| --- | ---: |",
+        ]
+    )
     for item, rate in sorted(project.targets.items()):
         lines.append(f"| {pack.items.get(item, item)} | {_number(rate)}/min |")
 

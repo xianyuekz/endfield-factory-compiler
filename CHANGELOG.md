@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here.
 
+## 0.4.3
+
+- add `efc compile --min-area` for deterministic minimum-area floorplan search;
+- add bounding-box dimensions, area and utilization to JSON, SVG and Markdown
+  reports;
+- make the router and DRC enforce aggregate same-item route-tile capacity on
+  logistics trunk tiles;
+- regenerate the HC Valley Battery artifact as a 41 x 17 routed floorplan;
+- add floorplanning documentation and regression coverage for the compact HC
+  Valley Battery acceptance target.
+
 ## 0.4.2
 
 - add a Valley IV community-data research region pack;

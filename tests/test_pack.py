@@ -28,6 +28,7 @@ class RegionPackTests(unittest.TestCase):
         self.assertIn("hc_valley_battery", pack.items)
         self.assertEqual(len(pack.devices), 6)
         self.assertEqual(len(pack.recipes), 10)
+        self.assertEqual(pack.logistics.tile_capacity_per_minute, 120)
 
         battery_recipe = pack.recipe_by_output()["hc_valley_battery"]
         self.assertEqual(battery_recipe.cycle_seconds, 10)

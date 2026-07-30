@@ -47,7 +47,9 @@ efc compile examples/control-core.json --out build/demo
 
 efc validate-pack region-packs/valley-iv-research/region.json
 efc validate-project examples/hc-valley-battery.json
-efc compile examples/hc-valley-battery.json --out build/hc-valley-battery
+efc compile examples/hc-valley-battery.json \
+  --out build/hc-valley-battery \
+  --min-area
 ```
 
 用浏览器打开 `build/demo/layout.svg` 即可查看布局；机器可读的物理设计结果位于
@@ -71,7 +73,8 @@ python -m unittest discover -s tests -v
 工程还可以约束最大功耗、设备数量和物流格数量，详见
 [工程文件规范](docs/PROJECTS.md)。
 
-第一个非玩具示例见[高容谷地电池](docs/HC_VALLEY_BATTERY.md)。它目前会输出
+第一个非玩具示例见[高容谷地电池](docs/HC_VALLEY_BATTERY.md)。启用
+`--min-area` 后，当前策略会把该设计压缩进 41 x 17 的已布线外框。它目前会输出
 SVG、JSON 物理计划和 Markdown 报告；官方游戏蓝图代码导出会保留在适配器边界
 之后，等格式足够明确并且允许支持后再做。
 
@@ -83,9 +86,10 @@ SVG、JSON 物理计划和 Markdown 报告；官方游戏蓝图代码导出会�
 - 功耗预算计算
 - 数据驱动的设备、配方、障碍物和物流能力
 - 可避开障碍物的确定性分层放置
+- 可选的最小面积 floorplan 搜索和紧凑放置合法化
 - 带交叉和转弯代价、感知拥塞的 A* 布线
 - 物理设备之间感知产能的多对多流量分配
-- 越界、重叠、功耗、单设备流量、物流容量及连通性 DRC
+- 越界、重叠、功耗、单设备流量、物流累计容量及连通性 DRC
 - 工程级功耗、设备数量和物流格约束
 - 占地率、路线长度、转弯和交叉等物理设计指标
 - 支持编辑器校验和自动补全的 JSON Schema
@@ -112,6 +116,7 @@ SVG、JSON 物理计划和 Markdown 报告；官方游戏蓝图代码导出会�
 [贡献指南](CONTRIBUTING.md)。
 版本变化记录在[更新日志](CHANGELOG.md)中。
 已知正确性问题按照优先级记录在[路线图](docs/ROADMAP.md)中。
+最小面积流程见[floorplanning 文档](docs/FLOORPLANNING.md)。
 
 ## 性能契约
 

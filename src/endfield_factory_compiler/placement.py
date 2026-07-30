@@ -87,3 +87,76 @@ def place_devices(
 
     return devices
 
+
+def place_devices_compact(
+    pack: RegionPack,
+    synthesis: SynthesisResult,
+) -> list[PlacedDevice]:
+    """Pack devices into the selected grid with a deterministic first-fit pass.
+
+    This strategy is intentionally simple: it preserves schema-v1 assumptions
+    such as non-rotated devices and inferred side ports, but it is useful for
+    bounded area search because it is much less wasteful than the default
+    depth-column visual layout.
+    """
+
+    occupied = set().union(*(obstacle.cells() for obstacle in pack.grid.obstacles))
+    devices: list[PlacedDevice] = []
+    instances = []
+    for node in synthesis.nodes:
+        recipe = pack.recipes[node.recipe_id]
+        device_spec = pack.devices[recipe.device]
+        for instance in range(1, node.machine_count + 1):
+            instances.append(
+                (
+                    -device_spec.width * device_spec.height,
+                    node.depth,
+                    node.recipe_id,
+                    instance,
+                    node,
+                )
+            )
+    instances.sort()
+
+    for _, _, _, instance, node in instances:
+        recipe = pack.recipes[node.recipe_id]
+        device_spec = pack.devices[recipe.device]
+        placed_rect: Rect | None = None
+
+        for candidate_y in range(1, pack.grid.height - device_spec.height + 1):
+            for candidate_x in range(1, pack.grid.width - device_spec.width):
+                candidate = Rect(
+                    candidate_x,
+                    candidate_y,
+                    device_spec.width,
+                    device_spec.height,
+                )
+                if not (
+                    _rect_with_halo(candidate, pack.grid.width, pack.grid.height)
+                    & occupied
+                ):
+                    placed_rect = candidate
+                    break
+            if placed_rect is not None:
+                break
+
+        if placed_rect is None:
+            raise PlacementError(
+                f"Cannot compact-place {node.recipe_id} instance {instance}; "
+                f"region {pack.id!r} is full"
+            )
+
+        placed = PlacedDevice(
+            id=f"{node.recipe_id}-{instance}",
+            recipe_id=node.recipe_id,
+            device_id=recipe.device,
+            output_item=recipe.output_item,
+            depth=node.depth,
+            rect=placed_rect,
+            input_items=tuple(recipe.inputs),
+        )
+        devices.append(placed)
+        occupied.update(placed_rect.cells())
+
+    devices.sort(key=lambda device: (device.depth, device.recipe_id, device.id))
+    return devices

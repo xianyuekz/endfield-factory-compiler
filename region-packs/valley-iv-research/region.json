@@ -24,7 +24,7 @@
     ]
   },
   "logistics": {
-    "tile_capacity_per_minute": 30,
+    "tile_capacity_per_minute": 120,
     "allow_crossings": true,
     "crossing_penalty": 10,
     "bend_penalty": 0.35

@@ -57,6 +57,11 @@ the left edge; the output port is centered on the right edge.
 one tile as an abstract bridge/underpass. Packs should enable it only when the
 target region has an equivalent capability.
 
+`tile_capacity_per_minute` limits both an individual route and the aggregate
+same-item flow on any shared logistics trunk tile. Schema-v1 inferred
+source/sink cells are treated as ports rather than ordinary trunk tiles because
+explicit port capacity is not modeled yet.
+
 `crossing_penalty` controls how strongly the router avoids such abstract
 bridges. `bend_penalty` favors simpler paths with fewer turns. Both values must
 be zero or greater and are routing costs rather than physical rates.
