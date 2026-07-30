@@ -82,6 +82,7 @@ Implemented:
 - physical metrics for footprint, utilization, route length, bends and crossings
 - JSON Schema files for editor validation and autocomplete
 - replaceable routing backends with CPU, search and timeout telemetry
+- standalone Rust route-core prototype for native A* hot-loop work
 - dependency-free JSON, SVG and Markdown output
 
 Deliberately not implemented:
@@ -104,6 +105,8 @@ Read [the architecture](docs/ARCHITECTURE.md) and
 [contribution guide](CONTRIBUTING.md) before starting a larger change.
 Release changes are recorded in the [changelog](CHANGELOG.md).
 Known correctness gaps are ordered in the [roadmap](docs/ROADMAP.md).
+Engineering checks are listed in [quality gates](docs/QUALITY.md), and larger
+technical choices are recorded as [architecture decisions](docs/adr).
 
 ## Performance contract
 
@@ -120,6 +123,9 @@ warning. Python is the CLI and data orchestration layer; performance-critical
 hot loops are expected to move into native backends as they mature. See
 [performance and parallelism](docs/PERFORMANCE.md) and the reproducible
 [`compile_scaling.py`](benchmarks/compile_scaling.py) benchmark.
+
+The first native kernel lives in [`native/route_core`](native/route_core). It
+is tested in CI but not required to install the Python CLI yet.
 
 ## Disclaimer
 

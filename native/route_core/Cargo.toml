@@ -1,0 +1,15 @@
+[package]
+name = "efc-route-core"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Native routing kernels for Endfield Factory Compiler."
+publish = false
+
+[lib]
+name = "efc_route_core"
+path = "src/lib.rs"
+
+[lints.rust]
+unsafe_code = "forbid"

@@ -23,6 +23,8 @@ python -m unittest discover -s tests -v
 efc compile examples/control-core.json --out build/demo
 ```
 
+See [quality gates](docs/QUALITY.md) for the full Python and Rust check list.
+
 Pull requests should:
 
 - preserve dependency-free operation unless a dependency is optional;
@@ -30,6 +32,8 @@ Pull requests should:
 - keep output deterministic;
 - avoid unrelated formatting changes;
 - update schemas and documentation together;
+- use [ADRs](docs/adr) for architecture, dependency or long-term performance
+  decisions;
 - not contain extracted game assets or unverifiable official claims.
 
 ## Region-pack contributions
@@ -49,4 +53,3 @@ Document region-pack versioning
 
 By contributing, you agree that your contribution is licensed under the MIT
 License.
-

@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here.
 
+## 0.4.0
+
+- add a standalone Rust `native/route_core` crate for the future routing hot
+  loop;
+- add a root Cargo workspace, Rust toolchain file, ADR and quality-gate docs;
+- implement deterministic native A* over compact integer cell/state arrays and
+  per-cell occupancy bitsets;
+- add native route-core tests to CI while keeping the Python package
+  dependency-free.
+
 ## 0.3.1
 
 - replace tuple/dictionary-heavy A* search state with compact integer-indexed

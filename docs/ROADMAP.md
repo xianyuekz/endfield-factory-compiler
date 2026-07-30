@@ -44,8 +44,9 @@ actually satisfied.
   telemetry (`v0.3.0`).
 - [x] Replace tuple/dictionary-heavy A* state with compact integer-indexed
   storage.
-- [ ] Move route search hot loops into a native Rust core with Python kept as
-  the CLI and data-loading layer.
+- [x] Add a standalone native Rust A* route-core crate.
+- [ ] Bind the native route core into a Python `RouterBackend` while keeping
+  pure-Python fallback behavior.
 - [ ] Add deterministic multi-start process parallelism.
 - [ ] Add conflict-batched parallel routing with deterministic commit and
   negotiated-congestion repair.

@@ -24,7 +24,7 @@ jobs:
       - name: Test
         run: python -m unittest discover -s tests -v
       - name: Compile bytecode
-        run: python -m compileall -q src tests
+        run: python -m compileall -q src tests benchmarks
       - name: Compile demo
         run: efc compile examples/control-core.json --out build/demo
       - name: Benchmark smoke test
@@ -32,3 +32,17 @@ jobs:
       - name: Build wheel
         if: matrix.python-version == '3.14'
         run: python -m pip wheel --no-deps . --wheel-dir dist
+
+  native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - name: Format native route core
+        run: cargo fmt --check --all
+      - name: Lint native route core
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Test native route core
+        run: cargo test --workspace

@@ -42,14 +42,18 @@ project.json             region.json
 - `report.py` produces a deterministic, reviewable Markdown report.
 - `compiler.py` owns the pipeline and stable result object.
 - `cli.py` is a thin shell over the library API.
+- `native/route_core` is a Rust prototype for routing hot loops that will
+  eventually sit behind the same `RouterBackend` contract.
 
-The current implementation is deliberately dependency-free. Its A* router
-prices congestion, incompatible crossings and bends while remaining
-deterministic. A future CP-SAT, MILP or PathFinder backend should be optional
-and should consume/produce the same intermediate models.
+The Python package remains dependency-free. Its compact A* router prices
+congestion, incompatible crossings and bends while remaining deterministic.
+Native, CP-SAT, MILP or PathFinder backends should be optional and should
+consume/produce the same intermediate models.
 
 All backends receive `ExecutionOptions`; no stage may create an unbudgeted
 nested worker pool. See [the performance guide](PERFORMANCE.md).
+Major architectural choices are tracked in [ADRs](adr), starting with
+[ADR 0001](adr/0001-native-routing-core.md).
 
 ## Design principles
 

@@ -99,6 +99,12 @@ high-performance data structures over intentionally slow beginner-friendly
 code in hot paths. Public interfaces and tests must stay readable even if the
 inner loops become lower-level.
 
+The first native component is [`native/route_core`](../native/route_core), a
+standalone Rust crate for deterministic single-net A*. It uses integer cell and
+state ids, reusable workspace arrays and per-cell occupancy bitsets. It is not
+yet wired into the Python `RouterBackend`; that binding is the next milestone.
+The rationale is captured in [ADR 0001](adr/0001-native-routing-core.md).
+
 ## Parallel implementation rules
 
 1. Keep deterministic single-job output as the reference.
