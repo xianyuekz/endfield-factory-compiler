@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here.
 
+## 0.4.1
+
+- apply Rust formatting required by the native CI quality gate.
+
 ## 0.4.0
 
 - add a standalone Rust `native/route_core` crate for the future routing hot

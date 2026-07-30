@@ -339,14 +339,7 @@ mod tests {
         };
         let mut workspace = AStarWorkspace::new();
 
-        let result = route_astar(
-            grid,
-            0,
-            3,
-            1,
-            SearchConfig::default(),
-            &mut workspace,
-        );
+        let result = route_astar(grid, 0, 3, 1, SearchConfig::default(), &mut workspace);
 
         assert_eq!(result.status, SearchStatus::Found);
         assert_eq!(result.path, vec![0, 1, 2, 3]);
@@ -365,14 +358,7 @@ mod tests {
         };
         let mut workspace = AStarWorkspace::new();
 
-        let result = route_astar(
-            grid,
-            0,
-            2,
-            1,
-            SearchConfig::default(),
-            &mut workspace,
-        );
+        let result = route_astar(grid, 0, 2, 1, SearchConfig::default(), &mut workspace);
 
         assert_eq!(result.status, SearchStatus::Found);
         assert_eq!(result.path.first(), Some(&0));
@@ -434,22 +420,8 @@ mod tests {
         };
         let mut workspace = AStarWorkspace::new();
 
-        let first = route_astar(
-            grid,
-            0,
-            4,
-            1,
-            SearchConfig::default(),
-            &mut workspace,
-        );
-        let second = route_astar(
-            grid,
-            5,
-            9,
-            1,
-            SearchConfig::default(),
-            &mut workspace,
-        );
+        let first = route_astar(grid, 0, 4, 1, SearchConfig::default(), &mut workspace);
+        let second = route_astar(grid, 5, 9, 1, SearchConfig::default(), &mut workspace);
 
         assert_eq!(first.status, SearchStatus::Found);
         assert_eq!(second.status, SearchStatus::Found);
