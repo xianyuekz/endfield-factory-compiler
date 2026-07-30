@@ -1,6 +1,12 @@
 {
   "format": "endfield-factory-compiler-plan",
   "format_version": 1,
+  "execution": {
+    "jobs": 1,
+    "deterministic": true,
+    "seed": 0,
+    "time_limit_seconds": null
+  },
   "project": {
     "name": "8 Control Cores per Minute",
     "targets": {
@@ -2078,6 +2084,26 @@
     "area_utilization_percent": 16.69776119402985,
     "power_utilization_percent": 50.666666666666664,
     "raw_input_rate_per_minute": 80.0
+  },
+  "routing_stats": {
+    "backend_name": "serial-grid-astar",
+    "requested_jobs": 1,
+    "effective_jobs": 1,
+    "deterministic": true,
+    "seed": 0,
+    "routes_requested": 25,
+    "routes_completed": 25,
+    "routes_failed": 0,
+    "astar_calls": 25,
+    "expanded_states": 4783,
+    "generated_states": 6931,
+    "heap_pushes": 6931,
+    "peak_frontier": 210,
+    "total_path_length": 351,
+    "elapsed_seconds": 0.011213099991437048,
+    "cpu_seconds": 0.015625,
+    "observed_core_equivalents": null,
+    "timed_out": false
   },
   "diagnostics": [
     {

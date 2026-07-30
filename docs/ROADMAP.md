@@ -37,3 +37,13 @@ unbuildable plan. It is intentionally narrower than a feature wish list.
 Each item should start with a failing regression test or a minimal reproducible
 project. A clean DRC report must mean that every implemented physical rule is
 actually satisfied.
+
+## Performance foundation
+
+- [x] Add a shared execution budget, replaceable router interface and routing
+  telemetry (`v0.3.0`).
+- [ ] Replace tuple/dictionary-heavy A* state with compact integer-indexed
+  storage.
+- [ ] Add deterministic multi-start process parallelism.
+- [ ] Add conflict-batched parallel routing with deterministic commit and
+  negotiated-congestion repair.

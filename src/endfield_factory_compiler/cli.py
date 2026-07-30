@@ -7,11 +7,12 @@ from pathlib import Path
 
 from . import __version__
 from .compiler import compile_project
-from .pack import PackError, load_project, load_region_pack
+from .execution import ExecutionOptions
+from .pack import load_project, load_region_pack
 from .placement import PlacementError
 from .render import render_svg
 from .report import render_markdown
-from .synthesis import SynthesisError, synthesize
+from .synthesis import synthesize
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -34,6 +35,28 @@ def _parser() -> argparse.ArgumentParser:
         default=Path("build"),
         help="Output directory (default: build)",
     )
+    compile_command.add_argument(
+        "--jobs",
+        type=int,
+        default=1,
+        help=(
+            "Requested router job budget; the current reference backend "
+            "reports a serial fallback when greater than 1"
+        ),
+    )
+    compile_command.add_argument(
+        "--seed",
+        type=int,
+        default=0,
+        help="Deterministic backend seed (default: 0)",
+    )
+    compile_command.add_argument(
+        "--time-limit",
+        type=float,
+        default=None,
+        metavar="SECONDS",
+        help="Soft routing time limit in seconds",
+    )
 
     validate_command = commands.add_parser(
         "validate-pack", help="Validate a region pack"
@@ -48,10 +71,22 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _compile(project_path: Path, output: Path) -> int:
+def _compile(
+    project_path: Path,
+    output: Path,
+    *,
+    jobs: int,
+    seed: int,
+    time_limit: float | None,
+) -> int:
     project = load_project(project_path)
     pack = load_region_pack(project.region_pack_path)
-    result = compile_project(project, pack)
+    options = ExecutionOptions(
+        jobs=jobs,
+        seed=seed,
+        time_limit_seconds=time_limit,
+    )
+    result = compile_project(project, pack, options=options)
 
     output.mkdir(parents=True, exist_ok=True)
     plan_path = output / "plan.json"
@@ -75,6 +110,7 @@ def _compile(project_path: Path, output: Path) -> int:
     report_path.write_text(render_markdown(result), encoding="utf-8")
 
     errors = sum(item.severity == "error" for item in result.diagnostics)
+    warnings = sum(item.severity == "warning" for item in result.diagnostics)
     print(f"Compiled {project.name!r}")
     print(
         f"  {len(result.layout.devices)} devices, "
@@ -85,7 +121,14 @@ def _compile(project_path: Path, output: Path) -> int:
         f"  {result.synthesis.total_power:.1f} power, "
         f"{result.metrics.area_utilization_percent:.1f}% area"
     )
-    print(f"  DRC: {errors} error(s)")
+    print(
+        f"  Router: {result.routing_stats.backend_name}, "
+        f"{result.routing_stats.effective_jobs}/"
+        f"{result.routing_stats.requested_jobs} jobs, "
+        f"{result.routing_stats.expanded_states} expanded states, "
+        f"{result.routing_stats.elapsed_seconds * 1000:.2f} ms"
+    )
+    print(f"  DRC: {errors} error(s), {warnings} warning(s)")
     print(f"  Plan: {plan_path}")
     print(f"  SVG:  {svg_path}")
     print(f"  Report: {report_path}")
@@ -96,7 +139,13 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
         if args.command == "compile":
-            return _compile(args.project, args.out)
+            return _compile(
+                args.project,
+                args.out,
+                jobs=args.jobs,
+                seed=args.seed,
+                time_limit=args.time_limit,
+            )
         if args.command == "validate-pack":
             pack = load_region_pack(args.pack)
             print(
@@ -114,7 +163,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"{sum(node.machine_count for node in synthesis.nodes)} devices"
             )
             return 0
-    except (PackError, PlacementError, SynthesisError) as exc:
+    except (PlacementError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     return 2

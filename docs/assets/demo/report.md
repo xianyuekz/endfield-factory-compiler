@@ -15,6 +15,13 @@
 | Total routed length | 351 tiles |
 | Route bends | 38 |
 | Crossing tiles | 7 |
+| Router | `serial-grid-astar` |
+| Router jobs | 1 / 1 effective/requested |
+| A* expanded states | 4783 |
+| Peak A* frontier | 210 |
+| Routing time | 11.21 ms |
+| Routing CPU time | 15.62 ms |
+| Observed core equivalents | n/a (sample too short) |
 | Area utilization | 16.7% |
 | Power | 304 / 600 |
 

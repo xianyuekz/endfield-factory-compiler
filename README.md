@@ -81,6 +81,7 @@ Implemented:
 - project-level power, device-count and route-tile constraints
 - physical metrics for footprint, utilization, route length, bends and crossings
 - JSON Schema files for editor validation and autocomplete
+- replaceable routing backends with CPU, search and timeout telemetry
 - dependency-free JSON, SVG and Markdown output
 
 Deliberately not implemented:
@@ -103,6 +104,21 @@ Read [the architecture](docs/ARCHITECTURE.md) and
 [contribution guide](CONTRIBUTING.md) before starting a larger change.
 Release changes are recorded in the [changelog](CHANGELOG.md).
 Known correctness gaps are ordered in the [roadmap](docs/ROADMAP.md).
+
+## Performance contract
+
+Backends receive one shared execution budget:
+
+```bash
+efc compile examples/control-core.json --out build/demo \
+  --jobs 8 --seed 0 --time-limit 30
+```
+
+The current reference A* backend remains deterministic and serial. When more
+than one job is requested it reports `1/N effective/requested` and emits a DRC
+warning instead of silently pretending to use multiple cores. See
+[performance and parallelism](docs/PERFORMANCE.md) and the reproducible
+[`compile_scaling.py`](benchmarks/compile_scaling.py) benchmark.
 
 ## Disclaimer
 

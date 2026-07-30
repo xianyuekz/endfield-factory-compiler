@@ -11,9 +11,15 @@ def render_markdown(result: CompilationResult) -> str:
     project = result.project
     pack = result.pack
     metrics = result.metrics
+    routing = result.routing_stats
     errors = sum(item.severity == "error" for item in result.diagnostics)
     warnings = sum(item.severity == "warning" for item in result.diagnostics)
     status = "PASS" if errors == 0 else "FAIL"
+    core_equivalents = (
+        f"{routing.observed_core_equivalents:.2f}"
+        if routing.observed_core_equivalents is not None
+        else "n/a (sample too short)"
+    )
 
     lines = [
         f"# {project.name}",
@@ -34,6 +40,14 @@ def render_markdown(result: CompilationResult) -> str:
         f"| Total routed length | {metrics.total_route_length} tiles |",
         f"| Route bends | {metrics.route_bends} |",
         f"| Crossing tiles | {metrics.crossing_tiles} |",
+        f"| Router | `{routing.backend_name}` |",
+        f"| Router jobs | {routing.effective_jobs} / "
+        f"{routing.requested_jobs} effective/requested |",
+        f"| A* expanded states | {routing.expanded_states} |",
+        f"| Peak A* frontier | {routing.peak_frontier} |",
+        f"| Routing time | {routing.elapsed_seconds * 1000:.2f} ms |",
+        f"| Routing CPU time | {routing.cpu_seconds * 1000:.2f} ms |",
+        f"| Observed core equivalents | {core_equivalents} |",
         f"| Area utilization | {metrics.area_utilization_percent:.1f}% |",
         f"| Power | {_number(result.synthesis.total_power)} / "
         f"{_number(pack.grid.max_power)} |",

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .drc import run_drc
+from .execution import ExecutionOptions
 from .metrics import calculate_metrics
 from .model import (
     CompilationMetrics,
@@ -14,7 +15,8 @@ from .model import (
     to_dict,
 )
 from .placement import place_devices
-from .routing import route_logistics
+from .routing import route_design
+from .routing_backend import RouterBackend, RoutingStats
 from .synthesis import synthesize
 
 
@@ -26,6 +28,8 @@ class CompilationResult:
     layout: LayoutResult
     metrics: CompilationMetrics
     diagnostics: list[Diagnostic]
+    execution_options: ExecutionOptions
+    routing_stats: RoutingStats
 
     @property
     def has_errors(self) -> bool:
@@ -35,6 +39,7 @@ class CompilationResult:
         return {
             "format": "endfield-factory-compiler-plan",
             "format_version": 1,
+            "execution": to_dict(self.execution_options),
             "project": {
                 "name": self.project.name,
                 "targets": dict(self.project.targets),
@@ -48,17 +53,38 @@ class CompilationResult:
             "synthesis": to_dict(self.synthesis),
             "layout": to_dict(self.layout),
             "metrics": to_dict(self.metrics),
+            "routing_stats": to_dict(self.routing_stats),
             "diagnostics": to_dict(self.diagnostics),
         }
 
 
-def compile_project(project: Project, pack: RegionPack) -> CompilationResult:
+def compile_project(
+    project: Project,
+    pack: RegionPack,
+    *,
+    options: ExecutionOptions | None = None,
+    router: RouterBackend | None = None,
+) -> CompilationResult:
+    selected_options = options or ExecutionOptions()
     synthesis = synthesize(pack, project.targets)
     devices = place_devices(pack, synthesis)
-    routes = route_logistics(pack, synthesis, devices)
-    layout = LayoutResult(devices=devices, routes=routes)
+    routing = route_design(
+        pack,
+        synthesis,
+        devices,
+        options=selected_options,
+        backend=router,
+    )
+    layout = LayoutResult(devices=devices, routes=routing.routes)
     metrics = calculate_metrics(pack, synthesis, layout)
-    diagnostics = run_drc(project, pack, synthesis, layout, metrics)
+    diagnostics = run_drc(
+        project,
+        pack,
+        synthesis,
+        layout,
+        metrics,
+        routing.stats,
+    )
     return CompilationResult(
         project=project,
         pack=pack,
@@ -66,4 +92,6 @@ def compile_project(project: Project, pack: RegionPack) -> CompilationResult:
         layout=layout,
         metrics=metrics,
         diagnostics=diagnostics,
+        execution_options=selected_options,
+        routing_stats=routing.stats,
     )

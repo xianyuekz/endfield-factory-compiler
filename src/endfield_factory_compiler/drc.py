@@ -11,6 +11,7 @@ from .model import (
     RegionPack,
     SynthesisResult,
 )
+from .routing_backend import RoutingStats
 
 
 def run_drc(
@@ -19,8 +20,29 @@ def run_drc(
     synthesis: SynthesisResult,
     layout: LayoutResult,
     metrics: CompilationMetrics,
+    routing_stats: RoutingStats | None = None,
 ) -> list[Diagnostic]:
     diagnostics: list[Diagnostic] = []
+
+    if routing_stats is not None:
+        if routing_stats.timed_out:
+            diagnostics.append(
+                Diagnostic(
+                    "error",
+                    "ROUTING_TIME_LIMIT_EXCEEDED",
+                    "Routing stopped after reaching the configured time limit.",
+                )
+            )
+        if routing_stats.requested_jobs > routing_stats.effective_jobs:
+            diagnostics.append(
+                Diagnostic(
+                    "warning",
+                    "ROUTER_SERIAL_FALLBACK",
+                    f"Router {routing_stats.backend_name!r} used "
+                    f"{routing_stats.effective_jobs} job(s) although "
+                    f"{routing_stats.requested_jobs} were requested.",
+                )
+            )
 
     if synthesis.total_power > pack.grid.max_power:
         diagnostics.append(

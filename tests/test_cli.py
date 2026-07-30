@@ -37,6 +37,24 @@ class CliTests(unittest.TestCase):
                 (output / "report.md").read_text(encoding="utf-8"),
             )
 
+    def test_compile_reports_serial_job_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = StringIO()
+            with redirect_stdout(output):
+                status = main(
+                    [
+                        "compile",
+                        str(PROJECT),
+                        "--out",
+                        directory,
+                        "--jobs",
+                        "4",
+                    ]
+                )
+            self.assertEqual(status, 0)
+            self.assertIn("1/4 jobs", output.getvalue())
+            self.assertIn("0 error(s), 1 warning(s)", output.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,9 +2,28 @@ from __future__ import annotations
 
 import heapq
 from collections import defaultdict
+from dataclasses import dataclass
 from itertools import count
+from time import perf_counter, process_time
 
+from .execution import ExecutionOptions
 from .model import PlacedDevice, RegionPack, Route, SynthesisResult
+from .routing_backend import (
+    RouterBackend,
+    RoutingProblem,
+    RoutingResult,
+    RoutingStats,
+)
+
+
+@dataclass
+class _SearchResult:
+    points: list[tuple[int, int]]
+    expanded_states: int
+    generated_states: int
+    heap_pushes: int
+    peak_frontier: int
+    timed_out: bool = False
 
 
 def _neighbors(
@@ -29,9 +48,10 @@ def _astar(
     allow_crossings: bool,
     crossing_penalty: float,
     bend_penalty: float,
-) -> list[tuple[int, int]]:
+    deadline: float | None,
+) -> _SearchResult:
     if start in blocked or goal in blocked:
-        return []
+        return _SearchResult([], 0, 0, 0, 0)
     serial = count()
     start_state = (start, None)
     frontier: list[
@@ -44,9 +64,27 @@ def _astar(
     cost: dict[
         tuple[tuple[int, int], tuple[int, int] | None], float
     ] = {start_state: 0.0}
+    expanded_states = 0
+    generated_states = 1
+    heap_pushes = 1
+    peak_frontier = 1
 
     while frontier:
+        if (
+            deadline is not None
+            and expanded_states % 256 == 0
+            and perf_counter() >= deadline
+        ):
+            return _SearchResult(
+                [],
+                expanded_states,
+                generated_states,
+                heap_pushes,
+                peak_frontier,
+                timed_out=True,
+            )
         _, _, current_state = heapq.heappop(frontier)
+        expanded_states += 1
         current, previous_direction = current_state
         if current == goal:
             path: list[tuple[int, int]] = []
@@ -54,7 +92,13 @@ def _astar(
             while cursor is not None:
                 path.append(cursor[0])
                 cursor = came_from[cursor]
-            return list(reversed(path))
+            return _SearchResult(
+                list(reversed(path)),
+                expanded_states,
+                generated_states,
+                heap_pushes,
+                peak_frontier,
+            )
         for neighbor in _neighbors(current, width, height):
             if neighbor in blocked:
                 continue
@@ -89,8 +133,17 @@ def _astar(
                     frontier,
                     (new_cost + heuristic, next(serial), neighbor_state),
                 )
+                generated_states += 1
+                heap_pushes += 1
+                peak_frontier = max(peak_frontier, len(frontier))
                 came_from[neighbor_state] = current_state
-    return []
+    return _SearchResult(
+        [],
+        expanded_states,
+        generated_states,
+        heap_pushes,
+        peak_frontier,
+    )
 
 
 def _boundary_port(
@@ -109,11 +162,26 @@ def _boundary_port(
     return None
 
 
-def route_logistics(
+def _route_serial(
     pack: RegionPack,
     synthesis: SynthesisResult,
     devices: list[PlacedDevice],
-) -> list[Route]:
+    options: ExecutionOptions,
+) -> RoutingResult:
+    started_at = perf_counter()
+    cpu_started_at = process_time()
+    deadline = (
+        started_at + options.time_limit_seconds
+        if options.time_limit_seconds is not None
+        else None
+    )
+    stats = RoutingStats(
+        backend_name=GridAStarRouter.name,
+        requested_jobs=options.jobs,
+        effective_jobs=1,
+        deterministic=True,
+        seed=options.seed,
+    )
     device_cells = set().union(*(device.rect.cells() for device in devices))
     obstacle_cells = set().union(*(rect.cells() for rect in pack.grid.obstacles))
     hard_blocked = device_cells | obstacle_cells
@@ -196,7 +264,7 @@ def route_logistics(
                     blocked = set(route_blocked)
                     blocked.discard(source)
                     blocked.discard(sink)
-                    points = (
+                    search_result = (
                         _astar(
                             source,
                             sink,
@@ -208,10 +276,24 @@ def route_logistics(
                             pack.logistics.allow_crossings,
                             pack.logistics.crossing_penalty,
                             pack.logistics.bend_penalty,
+                            deadline,
                         )
                         if source[0] >= 0
-                        else []
+                        else _SearchResult([], 0, 0, 0, 0)
                     )
+                    if source[0] >= 0:
+                        stats.astar_calls += 1
+                    stats.expanded_states += search_result.expanded_states
+                    stats.generated_states += search_result.generated_states
+                    stats.heap_pushes += search_result.heap_pushes
+                    stats.peak_frontier = max(
+                        stats.peak_frontier,
+                        search_result.peak_frontier,
+                    )
+                    stats.timed_out = (
+                        stats.timed_out or search_result.timed_out
+                    )
+                    points = search_result.points
                     if points:
                         for point in points:
                             route_occupancy[point].add(item)
@@ -227,4 +309,58 @@ def route_logistics(
                         )
                     )
                     route_number += 1
-    return routes
+    stats.routes_requested = len(routes)
+    stats.routes_completed = sum(route.routed for route in routes)
+    stats.routes_failed = stats.routes_requested - stats.routes_completed
+    stats.total_path_length = sum(route.length for route in routes)
+    stats.elapsed_seconds = perf_counter() - started_at
+    stats.cpu_seconds = process_time() - cpu_started_at
+    if stats.elapsed_seconds >= 0.05:
+        stats.observed_core_equivalents = (
+            stats.cpu_seconds / stats.elapsed_seconds
+        )
+    return RoutingResult(routes=routes, stats=stats)
+
+
+class GridAStarRouter:
+    """Deterministic serial reference backend for grid-based routing."""
+
+    name = "serial-grid-astar"
+
+    def route(
+        self,
+        problem: RoutingProblem,
+        options: ExecutionOptions,
+    ) -> RoutingResult:
+        return _route_serial(
+            problem.pack,
+            problem.synthesis,
+            problem.devices,
+            options,
+        )
+
+
+DEFAULT_ROUTER = GridAStarRouter()
+
+
+def route_design(
+    pack: RegionPack,
+    synthesis: SynthesisResult,
+    devices: list[PlacedDevice],
+    *,
+    options: ExecutionOptions | None = None,
+    backend: RouterBackend | None = None,
+) -> RoutingResult:
+    problem = RoutingProblem(pack=pack, synthesis=synthesis, devices=devices)
+    selected_options = options or ExecutionOptions()
+    selected_backend = backend or DEFAULT_ROUTER
+    return selected_backend.route(problem, selected_options)
+
+
+def route_logistics(
+    pack: RegionPack,
+    synthesis: SynthesisResult,
+    devices: list[PlacedDevice],
+) -> list[Route]:
+    """Compatibility wrapper returning only routes from the default backend."""
+    return route_design(pack, synthesis, devices).routes

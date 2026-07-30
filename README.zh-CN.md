@@ -77,6 +77,7 @@ python -m unittest discover -s tests -v
 - 工程级功耗、设备数量和物流格约束
 - 占地率、路线长度、转弯和交叉等物理设计指标
 - 支持编辑器校验和自动补全的 JSON Schema
+- 可替换的路由后端以及 CPU、搜索规模和超时遥测
 - 零依赖 JSON、SVG 和 Markdown 输出
 
 暂不实现：
@@ -98,6 +99,20 @@ python -m unittest discover -s tests -v
 [贡献指南](CONTRIBUTING.md)。
 版本变化记录在[更新日志](CHANGELOG.md)中。
 已知正确性问题按照优先级记录在[路线图](docs/ROADMAP.md)中。
+
+## 性能契约
+
+所有后端共用一份执行资源预算：
+
+```bash
+efc compile examples/control-core.json --out build/demo \
+  --jobs 8 --seed 0 --time-limit 30
+```
+
+当前参考 A* 后端仍然是确定性的串行实现。请求多个作业时，它会明确报告
+`1/N 实际/请求作业数`并产生 DRC 警告，不会假装已经使用多核。详细设计见
+[性能与并行架构](docs/PERFORMANCE.md)，可重复基准见
+[`compile_scaling.py`](benchmarks/compile_scaling.py)。
 
 ## 免责声明
 

@@ -30,10 +30,12 @@ project.json             region.json
 ## Modules
 
 - `pack.py` parses and validates project and region-pack inputs.
+- `execution.py` owns cross-backend resource and reproducibility settings.
 - `synthesis.py` expands target rates into a DAG and maps recipes to devices.
 - `placement.py` performs deterministic, obstacle-aware column placement.
 - `routing.py` splits flow across producer capacity, then connects device ports
   using grid-based A*.
+- `routing_backend.py` defines the replaceable backend and telemetry contracts.
 - `metrics.py` measures physical area, route length, bends and crossings.
 - `drc.py` checks physical and throughput constraints.
 - `render.py` produces a standalone SVG report.
@@ -45,6 +47,9 @@ The current implementation is deliberately dependency-free. Its A* router
 prices congestion, incompatible crossings and bends while remaining
 deterministic. A future CP-SAT, MILP or PathFinder backend should be optional
 and should consume/produce the same intermediate models.
+
+All backends receive `ExecutionOptions`; no stage may create an unbudgeted
+nested worker pool. See [the performance guide](PERFORMANCE.md).
 
 ## Design principles
 
