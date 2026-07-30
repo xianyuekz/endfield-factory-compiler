@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here.
 
+## 0.4.4
+
+- add CLI resource profiles (`low-power`, `balanced`, `quality`) for
+  low-end-friendly floorplan search budgets;
+- expose the selected execution profile and floorplan candidate budget in JSON
+  and Markdown reports;
+- document the native-first architecture for future placement, routing, DRC and
+  floorplan hot loops;
+- add regression coverage for profile-driven minimum-area compilation.
+
 ## 0.4.3
 
 - add `efc compile --min-area` for deterministic minimum-area floorplan search;

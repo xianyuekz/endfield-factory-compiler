@@ -2,7 +2,10 @@ import unittest
 from pathlib import Path
 
 from endfield_factory_compiler.compiler import compile_project
-from endfield_factory_compiler.execution import ExecutionOptions
+from endfield_factory_compiler.execution import (
+    ExecutionOptions,
+    resolve_performance_profile,
+)
 from endfield_factory_compiler.pack import load_project, load_region_pack
 from endfield_factory_compiler.routing import GridAStarRouter, route_logistics
 
@@ -30,6 +33,8 @@ class ExecutionTests(unittest.TestCase):
         self.pack = load_region_pack(self.project.region_pack_path)
 
     def test_execution_options_validate_resources(self):
+        with self.assertRaises(ValueError):
+            ExecutionOptions(profile="turbo-furnace")
         for jobs in (0, -1, 1.5, True):
             with self.subTest(jobs=jobs):
                 with self.assertRaises(ValueError):
@@ -40,6 +45,10 @@ class ExecutionTests(unittest.TestCase):
                     ExecutionOptions(time_limit_seconds=limit)
         with self.assertRaises(ValueError):
             ExecutionOptions(seed=True)
+        self.assertEqual(
+            resolve_performance_profile("low-power").floorplan_max_candidates,
+            300,
+        )
 
     def test_compilation_exposes_router_telemetry(self):
         result = compile_project(
@@ -65,6 +74,7 @@ class ExecutionTests(unittest.TestCase):
             {diagnostic.code for diagnostic in result.diagnostics},
         )
         plan = result.to_dict()
+        self.assertEqual(plan["execution"]["profile"], "balanced")
         self.assertEqual(plan["execution"]["jobs"], 4)
         self.assertEqual(plan["routing_stats"]["seed"], 7)
 

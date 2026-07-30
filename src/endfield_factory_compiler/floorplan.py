@@ -195,6 +195,7 @@ def search_minimum_floorplan(
             candidate.search = FloorplanSearchResult(
                 enabled=True,
                 strategy=search_options.strategy,
+                candidate_budget=search_options.max_candidates,
                 lower_bound_area=lower_bound_area,
                 baseline_area=baseline_area,
                 candidates_tested=candidates_tested,
@@ -214,6 +215,7 @@ def search_minimum_floorplan(
     baseline.search = FloorplanSearchResult(
         enabled=True,
         strategy=search_options.strategy,
+        candidate_budget=search_options.max_candidates,
         lower_bound_area=lower_bound_area,
         baseline_area=baseline_area,
         candidates_tested=candidates_tested,

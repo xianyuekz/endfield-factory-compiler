@@ -2,6 +2,7 @@
   "format": "endfield-factory-compiler-plan",
   "format_version": 1,
   "execution": {
+    "profile": "balanced",
     "jobs": 1,
     "deterministic": true,
     "seed": 0,
@@ -5430,14 +5431,15 @@
     "heap_pushes": 12566,
     "peak_frontier": 65,
     "total_path_length": 1044,
-    "elapsed_seconds": 0.021871000004466623,
-    "cpu_seconds": 0.015625,
+    "elapsed_seconds": 0.021575499995378777,
+    "cpu_seconds": 0.03125,
     "observed_core_equivalents": null,
     "timed_out": false
   },
   "floorplan_search": {
     "enabled": true,
     "strategy": "compact-first-fit",
+    "candidate_budget": 1000,
     "lower_bound_area": 391,
     "baseline_area": 3660,
     "candidates_tested": 815,

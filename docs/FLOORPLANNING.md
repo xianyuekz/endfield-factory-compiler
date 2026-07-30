@@ -9,8 +9,14 @@ Use `--min-area` when the goal is a compact physical design:
 ```bash
 efc compile examples/hc-valley-battery.json \
   --out build/hc-valley-battery \
-  --min-area
+  --min-area \
+  --profile balanced
 ```
+
+Use `--profile low-power` for older machines, `--profile balanced` for the
+default acceptance target or `--profile quality` when you want to spend more
+time exploring candidate rectangles. `--floorplan-max-candidates N` still
+overrides the profile budget explicitly.
 
 The current floorplanner is deterministic and deliberately conservative:
 
@@ -34,6 +40,7 @@ in Markdown:
 {
   "enabled": true,
   "strategy": "compact-first-fit",
+  "candidate_budget": 1000,
   "lower_bound_area": 391,
   "baseline_area": 3660,
   "candidates_tested": 815,

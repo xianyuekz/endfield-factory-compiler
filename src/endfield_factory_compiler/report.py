@@ -33,6 +33,7 @@ def render_markdown(result: CompilationResult) -> str:
         "| --- | ---: |",
         f"| DRC | **{status}** ({errors} errors, {warnings} warnings) |",
         f"| Region pack | `{pack.id}` {pack.version} |",
+        f"| Execution profile | `{result.execution_options.profile}` |",
         f"| Devices | {metrics.device_count} |",
         f"| Device footprint | {metrics.device_tiles} tiles |",
         f"| Logistics routes | {metrics.route_count} |",
@@ -66,6 +67,7 @@ def render_markdown(result: CompilationResult) -> str:
         lines.extend(
             [
                 f"| Floorplan strategy | `{search.strategy}` |",
+                f"| Floorplan candidate budget | {search.candidate_budget} |",
                 f"| Floorplan candidates tested | {search.candidates_tested} |",
                 f"| Floorplan lower-bound area | {search.lower_bound_area} tiles |",
                 f"| Floorplan baseline area | {search.baseline_area} tiles |",

@@ -5,6 +5,36 @@ from math import isfinite
 
 
 @dataclass(frozen=True)
+class PerformanceProfile:
+    name: str
+    floorplan_max_candidates: int
+
+
+PERFORMANCE_PROFILES: dict[str, PerformanceProfile] = {
+    "low-power": PerformanceProfile(
+        name="low-power",
+        floorplan_max_candidates=300,
+    ),
+    "balanced": PerformanceProfile(
+        name="balanced",
+        floorplan_max_candidates=1000,
+    ),
+    "quality": PerformanceProfile(
+        name="quality",
+        floorplan_max_candidates=2500,
+    ),
+}
+
+
+def resolve_performance_profile(name: str) -> PerformanceProfile:
+    try:
+        return PERFORMANCE_PROFILES[name]
+    except KeyError as exc:
+        allowed = ", ".join(sorted(PERFORMANCE_PROFILES))
+        raise ValueError(f"profile must be one of: {allowed}") from exc
+
+
+@dataclass(frozen=True)
 class ExecutionOptions:
     """Cross-stage resource and reproducibility settings.
 
@@ -13,12 +43,14 @@ class ExecutionOptions:
     seed and timeout settings.
     """
 
+    profile: str = "balanced"
     jobs: int = 1
     deterministic: bool = True
     seed: int = 0
     time_limit_seconds: float | None = None
 
     def __post_init__(self) -> None:
+        resolve_performance_profile(self.profile)
         if (
             isinstance(self.jobs, bool)
             or not isinstance(self.jobs, int)

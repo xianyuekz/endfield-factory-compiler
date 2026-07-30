@@ -44,6 +44,7 @@ compiler backends:
 
 ```python
 ExecutionOptions(
+    profile="balanced",
     jobs=8,
     deterministic=True,
     seed=0,
@@ -67,6 +68,35 @@ silently pretending to use multiple cores.
 - timeout status.
 
 Every `plan.json` and Markdown report contains this telemetry.
+
+## Resource profiles
+
+The CLI exposes three resource profiles:
+
+| Profile | Floorplan candidates | Intent |
+| --- | ---: | --- |
+| `low-power` | 300 | cap search for older laptops or background runs |
+| `balanced` | 1000 | default; enough for the HC Valley Battery acceptance target |
+| `quality` | 2500 | spend more time looking for tighter layouts |
+
+```bash
+efc compile examples/hc-valley-battery.json \
+  --out build/hc-valley-battery \
+  --min-area \
+  --profile low-power
+```
+
+Users can still override the floorplan budget explicitly:
+
+```bash
+efc compile examples/hc-valley-battery.json \
+  --out build/hc-valley-battery \
+  --min-area \
+  --floorplan-max-candidates 2000
+```
+
+Profiles are not a substitute for native kernels. They are a stable user-facing
+resource contract that future Rust/C++ backends can honor.
 
 ## Floorplan search cost
 
@@ -109,6 +139,10 @@ treated as native-core candidates. Rust is the preferred first target because
 it gives predictable memory layout, safe parallelism and a clean path to Python
 bindings later. C++ remains acceptable for third-party solver integration when
 the dependency already exposes a stable C or C++ API.
+
+This direction is formalized in
+[ADR 0002](adr/0002-low-end-native-first.md): Python is the control plane;
+placement, routing, DRC and floorplan search are native-kernel candidates.
 
 AI-assisted maintenance changes the tradeoff: the project should prefer clear
 high-performance data structures over intentionally slow beginner-friendly

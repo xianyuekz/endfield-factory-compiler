@@ -1,6 +1,6 @@
+import json
 import tempfile
 import unittest
-import json
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
@@ -81,6 +81,32 @@ class CliTests(unittest.TestCase):
                 plan["floorplan_search"]["selected_area"],
                 plan["floorplan_search"]["baseline_area"],
             )
+
+    def test_compile_profile_controls_floorplan_budget(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = StringIO()
+            with redirect_stdout(output):
+                status = main(
+                    [
+                        "compile",
+                        str(PROJECT),
+                        "--out",
+                        directory,
+                        "--profile",
+                        "low-power",
+                        "--min-area",
+                    ]
+                )
+            self.assertEqual(status, 0)
+            self.assertIn("Profile: low-power", output.getvalue())
+            plan = json.loads(
+                (Path(directory) / "plan.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(plan["execution"]["profile"], "low-power")
+            self.assertEqual(plan["floorplan_search"]["candidate_budget"], 300)
+            report = (Path(directory) / "report.md").read_text(encoding="utf-8")
+            self.assertIn("| Execution profile | `low-power` |", report)
+            self.assertIn("| Floorplan candidate budget | 300 |", report)
 
 
 if __name__ == "__main__":

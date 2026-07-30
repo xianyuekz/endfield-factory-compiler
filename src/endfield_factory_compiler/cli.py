@@ -7,7 +7,11 @@ from pathlib import Path
 
 from . import __version__
 from .compiler import compile_project
-from .execution import ExecutionOptions
+from .execution import (
+    ExecutionOptions,
+    PERFORMANCE_PROFILES,
+    resolve_performance_profile,
+)
 from .floorplan import FloorplanSearchError
 from .model import FloorplanSearchOptions
 from .pack import load_project, load_region_pack
@@ -38,9 +42,18 @@ def _parser() -> argparse.ArgumentParser:
         help="Output directory (default: build)",
     )
     compile_command.add_argument(
+        "--profile",
+        choices=sorted(PERFORMANCE_PROFILES),
+        default="balanced",
+        help=(
+            "Resource profile for low-end or quality-oriented runs "
+            "(default: balanced)"
+        ),
+    )
+    compile_command.add_argument(
         "--jobs",
         type=int,
-        default=1,
+        default=None,
         help=(
             "Requested router job budget; the current reference backend "
             "reports a serial fallback when greater than 1"
@@ -70,9 +83,12 @@ def _parser() -> argparse.ArgumentParser:
     compile_command.add_argument(
         "--floorplan-max-candidates",
         type=int,
-        default=1000,
+        default=None,
         metavar="N",
-        help="Maximum candidate rectangles tested by --min-area (default: 1000)",
+        help=(
+            "Maximum candidate rectangles tested by --min-area "
+            "(default comes from --profile)"
+        ),
     )
 
     validate_command = commands.add_parser(
@@ -92,22 +108,30 @@ def _compile(
     project_path: Path,
     output: Path,
     *,
-    jobs: int,
+    profile: str,
+    jobs: int | None,
     seed: int,
     time_limit: float | None,
     min_area: bool,
-    floorplan_max_candidates: int,
+    floorplan_max_candidates: int | None,
 ) -> int:
     project = load_project(project_path)
     pack = load_region_pack(project.region_pack_path)
+    selected_profile = resolve_performance_profile(profile)
+    selected_jobs = jobs if jobs is not None else 1
     options = ExecutionOptions(
-        jobs=jobs,
+        profile=profile,
+        jobs=selected_jobs,
         seed=seed,
         time_limit_seconds=time_limit,
     )
     floorplan = FloorplanSearchOptions(
         enabled=min_area,
-        max_candidates=floorplan_max_candidates,
+        max_candidates=(
+            floorplan_max_candidates
+            if floorplan_max_candidates is not None
+            else selected_profile.floorplan_max_candidates
+        ),
     )
     result = compile_project(project, pack, options=options, floorplan=floorplan)
 
@@ -118,6 +142,7 @@ def _compile(
     plan_path.write_text(
         json.dumps(result.to_dict(), ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     svg_path.write_text(
         render_svg(
@@ -129,12 +154,18 @@ def _compile(
             result.diagnostics,
         ),
         encoding="utf-8",
+        newline="\n",
     )
-    report_path.write_text(render_markdown(result), encoding="utf-8")
+    report_path.write_text(
+        render_markdown(result),
+        encoding="utf-8",
+        newline="\n",
+    )
 
     errors = sum(item.severity == "error" for item in result.diagnostics)
     warnings = sum(item.severity == "warning" for item in result.diagnostics)
     print(f"Compiled {project.name!r}")
+    print(f"  Profile: {options.profile}")
     print(
         f"  {len(result.layout.devices)} devices, "
         f"{len(result.layout.routes)} routes, "
@@ -175,6 +206,7 @@ def main(argv: list[str] | None = None) -> int:
             return _compile(
                 args.project,
                 args.out,
+                profile=args.profile,
                 jobs=args.jobs,
                 seed=args.seed,
                 time_limit=args.time_limit,

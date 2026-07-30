@@ -102,6 +102,7 @@ class FloorplanSearchOptions:
 class FloorplanSearchResult:
     enabled: bool
     strategy: str
+    candidate_budget: int
     lower_bound_area: int
     baseline_area: int
     candidates_tested: int

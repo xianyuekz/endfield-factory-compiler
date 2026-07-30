@@ -8,6 +8,7 @@
 | --- | ---: |
 | DRC | **PASS** (0 errors, 1 warnings) |
 | Region pack | `valley-iv-research` 0.1.0 |
+| Execution profile | `balanced` |
 | Devices | 28 |
 | Device footprint | 391 tiles |
 | Logistics routes | 43 |
@@ -21,12 +22,13 @@
 | Router jobs | 1 / 1 effective/requested |
 | A* expanded states | 11711 |
 | Peak A* frontier | 65 |
-| Routing time | 21.87 ms |
-| Routing CPU time | 15.62 ms |
+| Routing time | 21.58 ms |
+| Routing CPU time | 31.25 ms |
 | Observed core equivalents | n/a (sample too short) |
 | Area utilization | 96.3% |
 | Power | 604 / 1800 |
 | Floorplan strategy | `compact-first-fit` |
+| Floorplan candidate budget | 1000 |
 | Floorplan candidates tested | 815 |
 | Floorplan lower-bound area | 391 tiles |
 | Floorplan baseline area | 3660 tiles |

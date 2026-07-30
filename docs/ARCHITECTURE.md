@@ -54,8 +54,10 @@ and should consume/produce the same intermediate models.
 
 All backends receive `ExecutionOptions`; no stage may create an unbudgeted
 nested worker pool. See [the performance guide](PERFORMANCE.md).
-Major architectural choices are tracked in [ADRs](adr), starting with
-[ADR 0001](adr/0001-native-routing-core.md).
+Major architectural choices are tracked in [ADRs](adr), including
+[ADR 0001](adr/0001-native-routing-core.md) for the first native route kernel
+and [ADR 0002](adr/0002-low-end-native-first.md) for low-end-friendly
+native-first planning.
 
 ## Design principles
 

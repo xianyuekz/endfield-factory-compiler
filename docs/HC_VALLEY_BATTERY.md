@@ -6,7 +6,8 @@ Endfield factory goal rather than a fictional toy item.
 ```bash
 efc compile examples/hc-valley-battery.json \
   --out build/hc-valley-battery \
-  --min-area
+  --min-area \
+  --profile balanced
 ```
 
 The compiler will emit:
@@ -25,6 +26,11 @@ The checked-in snapshot is regenerated with the same command and lives under
 - 697 selected floorplan tiles;
 - 604 power in the research pack;
 - 0 DRC errors.
+
+On lower-end machines, `--profile low-power` intentionally caps the search
+earlier. It may return a larger valid layout or stop before proving the same
+41 x 17 minimum. That is a feature, not a regression: the default must stay
+usable while `balanced` and `quality` remain available for deeper searches.
 
 ## Scope
 

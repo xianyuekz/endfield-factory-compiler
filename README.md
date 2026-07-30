@@ -52,7 +52,8 @@ efc validate-pack region-packs/valley-iv-research/region.json
 efc validate-project examples/hc-valley-battery.json
 efc compile examples/hc-valley-battery.json \
   --out build/hc-valley-battery \
-  --min-area
+  --min-area \
+  --profile balanced
 ```
 
 Open `build/demo/layout.svg` in a browser. The machine-readable physical plan
@@ -142,8 +143,13 @@ efc compile examples/control-core.json --out build/demo \
 The current compact A* backend remains deterministic and serial. When more than
 one job is requested it reports `1/N effective/requested` and emits a DRC
 warning. Python is the CLI and data orchestration layer; performance-critical
-hot loops are expected to move into native backends as they mature. See
-[performance and parallelism](docs/PERFORMANCE.md) and the reproducible
+hot loops are expected to move into native backends as they mature.
+
+Use `--profile low-power`, `--profile balanced` or `--profile quality` to cap
+optimization effort for different machines. Profiles currently control
+floorplan candidate budgets and are the long-term resource contract that future
+native kernels should honor. See [performance and parallelism](docs/PERFORMANCE.md)
+and the reproducible
 [`compile_scaling.py`](benchmarks/compile_scaling.py) benchmark.
 
 The first native kernel lives in [`native/route_core`](native/route_core). It

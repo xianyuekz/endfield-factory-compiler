@@ -8,6 +8,7 @@
 | --- | ---: |
 | DRC | **PASS** (0 errors, 0 warnings) |
 | Region pack | `demo-valley` 0.2.0 |
+| Execution profile | `balanced` |
 | Devices | 13 |
 | Device footprint | 156 tiles |
 | Logistics routes | 25 |
@@ -21,7 +22,7 @@
 | Router jobs | 1 / 1 effective/requested |
 | A* expanded states | 4016 |
 | Peak A* frontier | 274 |
-| Routing time | 7.80 ms |
+| Routing time | 8.00 ms |
 | Routing CPU time | 15.62 ms |
 | Observed core equivalents | n/a (sample too short) |
 | Area utilization | 16.6% |

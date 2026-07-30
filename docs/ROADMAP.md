@@ -53,6 +53,8 @@ actually satisfied.
 - [x] Replace tuple/dictionary-heavy A* state with compact integer-indexed
   storage.
 - [x] Add a standalone native Rust A* route-core crate.
+- [x] Add explicit low-power/balanced/quality resource profiles for floorplan
+  search budgets (`v0.4.4`).
 - [ ] Bind the native route core into a Python `RouterBackend` while keeping
   pure-Python fallback behavior.
 - [ ] Add deterministic multi-start process parallelism.

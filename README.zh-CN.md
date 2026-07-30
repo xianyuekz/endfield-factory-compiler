@@ -49,7 +49,8 @@ efc validate-pack region-packs/valley-iv-research/region.json
 efc validate-project examples/hc-valley-battery.json
 efc compile examples/hc-valley-battery.json \
   --out build/hc-valley-battery \
-  --min-area
+  --min-area \
+  --profile balanced
 ```
 
 用浏览器打开 `build/demo/layout.svg` 即可查看布局；机器可读的物理设计结果位于
@@ -129,8 +130,13 @@ efc compile examples/control-core.json --out build/demo \
 
 当前紧凑 A* 后端仍然是确定性的串行实现。请求多个作业时，它会明确报告
 `1/N 实际/请求作业数`并产生 DRC 警告。Python 定位为 CLI 和数据编排层；
-成熟后的性能热点应迁移到原生后端。详细设计见[性能与并行架构](docs/PERFORMANCE.md)，
-可重复基准见[`compile_scaling.py`](benchmarks/compile_scaling.py)。
+成熟后的性能热点应迁移到原生后端。
+
+可以用 `--profile low-power`、`--profile balanced` 或 `--profile quality`
+为不同性能的机器限制优化力度。当前这些档位控制 floorplan 候选预算；长期看，
+它们也是未来 Rust/C++ 原生内核必须遵守的资源契约。详细设计见
+[性能与并行架构](docs/PERFORMANCE.md)，可重复基准见
+[`compile_scaling.py`](benchmarks/compile_scaling.py)。
 
 ## 免责声明
 

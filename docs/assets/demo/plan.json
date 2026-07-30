@@ -2,6 +2,7 @@
   "format": "endfield-factory-compiler-plan",
   "format_version": 1,
   "execution": {
+    "profile": "balanced",
     "jobs": 1,
     "deterministic": true,
     "seed": 0,
@@ -2168,7 +2169,7 @@
     "heap_pushes": 6454,
     "peak_frontier": 274,
     "total_path_length": 367,
-    "elapsed_seconds": 0.00780289999966044,
+    "elapsed_seconds": 0.007995699997991323,
     "cpu_seconds": 0.015625,
     "observed_core_equivalents": null,
     "timed_out": false
