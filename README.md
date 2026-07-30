@@ -1,0 +1,102 @@
+# Endfield Factory Compiler
+
+[简体中文](README.zh-CN.md)
+
+[![CI](https://github.com/xianyuekz/endfield-factory-compiler/actions/workflows/ci.yml/badge.svg)](https://github.com/xianyuekz/endfield-factory-compiler/actions/workflows/ci.yml)
+[![GitHub stars](https://img.shields.io/github/stars/xianyuekz/endfield-factory-compiler?style=flat)](https://github.com/xianyuekz/endfield-factory-compiler/stargazers)
+
+> An experimental, offline EDA pipeline for factory planning: recipe
+> synthesis, technology mapping, placement, logistics routing and DRC.
+
+![Generated demo layout](docs/assets/demo/layout.svg)
+
+This repository is a small, working proof of concept—not a promise to build a
+full game tool. It explores what happens when factory planning is treated like
+FPGA physical design:
+
+```text
+production targets
+  -> recipe synthesis
+  -> region technology mapping
+  -> device placement
+  -> A* logistics routing
+  -> design-rule checks
+  -> SVG + JSON plan
+```
+
+The demo compiles a target of 8 control cores per minute into 13 devices and 18
+routes with a clean DRC report. It uses fictional data so that the repository
+does not redistribute game assets or claim that unverified values are
+authoritative.
+
+## Try it
+
+Requirements: Python 3.11 or newer. There are no runtime dependencies.
+
+```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Linux/macOS: source .venv/bin/activate
+python -m pip install -e .
+
+efc validate-pack region-packs/demo-valley/region.json
+efc compile examples/control-core.json --out build/demo
+```
+
+Open `build/demo/layout.svg` in a browser. The machine-readable physical plan
+is written to `build/demo/plan.json`.
+
+Run the test suite with:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+## Why region packs?
+
+Maps, devices, recipes, footprints and logistics rules can vary by area and
+game update. The compiler core therefore knows no official game data. A
+versioned region pack supplies the "device support" layer, similar to installing
+an FPGA family in Quartus.
+
+See [the region-pack format](docs/REGION_PACKS.md) and the fictional
+[`demo-valley`](region-packs/demo-valley/region.json) pack.
+
+## Current scope
+
+Implemented:
+
+- DAG recipe expansion and machine-count calculation
+- power-budget calculation
+- data-driven devices, recipes, grid obstacles and logistics capabilities
+- deterministic column placement with obstacle avoidance
+- A* routing with optional abstract crossings
+- DRC for bounds, overlap, power, route capacity and connectivity
+- dependency-free JSON and SVG output
+
+Deliberately not implemented:
+
+- official Endfield blueprint-code import or export
+- extracted or copyrighted game assets
+- alternate recipes, by-products, fluids or cyclic production graphs
+- global-optimal placement and negotiated-congestion routing
+- GUI, account system or online backend
+
+These boundaries keep the seed project understandable and safe to fork.
+
+## Project status
+
+Experimental and community-maintained. Feature proposals, region-pack data and
+alternative placement/routing backends are welcome. Response times are not
+guaranteed, and new maintainers are explicitly welcome.
+
+Read [the architecture](docs/ARCHITECTURE.md) and
+[contribution guide](CONTRIBUTING.md) before starting a larger change.
+
+## Disclaimer
+
+This is an unofficial fan-made technical experiment. It is not affiliated with
+or endorsed by Hypergryph, Gryphline, or the developers and publishers of
+Arknights: Endfield. All trademarks belong to their respective owners.
+
+Licensed under the [MIT License](LICENSE).

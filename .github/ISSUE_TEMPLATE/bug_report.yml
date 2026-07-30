@@ -1,0 +1,39 @@
+name: Bug report
+description: Report a reproducible compiler or layout problem
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to provide a reproducible report.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Include the command, expected result and actual result.
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Minimal project and region pack
+      description: Paste or link to the smallest input that reproduces the issue.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Compiler version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: assets
+    attributes:
+      label: Does the report include extracted game assets?
+      options:
+        - "No"
+        - "Yes — I will remove them before submitting"
+    validations:
+      required: true
+

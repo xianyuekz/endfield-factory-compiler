@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "name": "8 Control Cores per Minute",
+  "region_pack": "../region-packs/demo-valley/region.json",
+  "targets": {
+    "control_core": 8
+  }
+}
+

@@ -1,0 +1,28 @@
+name: Region-pack contribution
+description: Propose new or corrected legally redistributable data
+title: "[Region pack]: "
+labels: ["region-pack"]
+body:
+  - type: input
+    id: region
+    attributes:
+      label: Region and data version
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Public sources
+      description: Link to sources and explain how values were verified.
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Redistribution
+      options:
+        - label: This contribution contains no extracted proprietary assets.
+          required: true
+        - label: I ran `efc validate-pack` successfully.
+          required: true
+

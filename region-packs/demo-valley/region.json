@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "id": "demo-valley",
+  "name": "Demo Valley (fictional data)",
+  "version": "0.1.0",
+  "grid": {
+    "width": 64,
+    "height": 34,
+    "max_power": 600,
+    "obstacles": [
+      {
+        "x": 27,
+        "y": 13,
+        "width": 4,
+        "height": 5
+      },
+      {
+        "x": 46,
+        "y": 2,
+        "width": 3,
+        "height": 4
+      }
+    ]
+  },
+  "logistics": {
+    "tile_capacity_per_minute": 60,
+    "allow_crossings": true
+  },
+  "items": {
+    "iron_ore": {
+      "name": "Iron Ore"
+    },
+    "copper_ore": {
+      "name": "Copper Ore"
+    },
+    "quartz": {
+      "name": "Quartz"
+    },
+    "iron_powder": {
+      "name": "Iron Powder"
+    },
+    "copper_wire": {
+      "name": "Copper Wire"
+    },
+    "frame": {
+      "name": "Structural Frame"
+    },
+    "circuit": {
+      "name": "Logic Circuit"
+    },
+    "control_core": {
+      "name": "Control Core"
+    }
+  },
+  "devices": {
+    "crusher": {
+      "name": "Crusher",
+      "width": 3,
+      "height": 3,
+      "power": 12
+    },
+    "refiner": {
+      "name": "Refiner",
+      "width": 4,
+      "height": 3,
+      "power": 20
+    },
+    "assembler": {
+      "name": "Assembler",
+      "width": 4,
+      "height": 3,
+      "power": 24
+    },
+    "constructor": {
+      "name": "Constructor",
+      "width": 5,
+      "height": 3,
+      "power": 36
+    }
+  },
+  "recipes": {
+    "make_iron_powder": {
+      "name": "Iron Powder",
+      "device": "crusher",
+      "cycle_seconds": 4,
+      "inputs": {
+        "iron_ore": 2
+      },
+      "output": {
+        "item": "iron_powder",
+        "amount": 2
+      }
+    },
+    "make_copper_wire": {
+      "name": "Copper Wire",
+      "device": "refiner",
+      "cycle_seconds": 6,
+      "inputs": {
+        "copper_ore": 1
+      },
+      "output": {
+        "item": "copper_wire",
+        "amount": 2
+      }
+    },
+    "make_frame": {
+      "name": "Structural Frame",
+      "device": "assembler",
+      "cycle_seconds": 12,
+      "inputs": {
+        "iron_powder": 3
+      },
+      "output": {
+        "item": "frame",
+        "amount": 1
+      }
+    },
+    "make_circuit": {
+      "name": "Logic Circuit",
+      "device": "assembler",
+      "cycle_seconds": 10,
+      "inputs": {
+        "copper_wire": 2,
+        "quartz": 1
+      },
+      "output": {
+        "item": "circuit",
+        "amount": 1
+      }
+    },
+    "make_control_core": {
+      "name": "Control Core",
+      "device": "constructor",
+      "cycle_seconds": 15,
+      "inputs": {
+        "frame": 2,
+        "circuit": 2
+      },
+      "output": {
+        "item": "control_core",
+        "amount": 1
+      }
+    }
+  }
+}
