@@ -2086,7 +2086,7 @@
     "raw_input_rate_per_minute": 80.0
   },
   "routing_stats": {
-    "backend_name": "serial-grid-astar",
+    "backend_name": "serial-compact-grid-astar",
     "requested_jobs": 1,
     "effective_jobs": 1,
     "deterministic": true,
@@ -2095,12 +2095,12 @@
     "routes_completed": 25,
     "routes_failed": 0,
     "astar_calls": 25,
-    "expanded_states": 4783,
+    "expanded_states": 4516,
     "generated_states": 6931,
     "heap_pushes": 6931,
     "peak_frontier": 210,
     "total_path_length": 351,
-    "elapsed_seconds": 0.011213099991437048,
+    "elapsed_seconds": 0.007663299998966977,
     "cpu_seconds": 0.015625,
     "observed_core_equivalents": null,
     "timed_out": false

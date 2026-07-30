@@ -48,7 +48,7 @@ class ExecutionTests(unittest.TestCase):
             options=ExecutionOptions(jobs=4, seed=7),
         )
         stats = result.routing_stats
-        self.assertEqual(stats.backend_name, "serial-grid-astar")
+        self.assertEqual(stats.backend_name, "serial-compact-grid-astar")
         self.assertEqual(stats.requested_jobs, 4)
         self.assertEqual(stats.effective_jobs, 1)
         self.assertEqual(stats.routes_requested, len(result.layout.routes))

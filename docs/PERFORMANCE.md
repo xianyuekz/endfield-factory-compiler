@@ -26,6 +26,17 @@ Run the checked-in benchmark to establish a local baseline:
 python benchmarks/compile_scaling.py --repeats 3
 ```
 
+After the `v0.3.1` compact-state router change, the same audit machine measured:
+
+| Target rate | Devices | Routes | Routing time |
+| ---: | ---: | ---: | ---: |
+| 8/min | 13 | 25 | 4.8 ms |
+| 32/min | 46 | 96 | 59.9 ms |
+| 64/min | 90 | 190 | 172.2 ms |
+
+This is still single-core execution. The win comes from avoiding tuple-heavy
+search state and reusing A* workspace arrays across routes.
+
 ## Execution contract
 
 `ExecutionOptions` is the single CPU and reproducibility contract shared by
@@ -40,7 +51,8 @@ ExecutionOptions(
 )
 ```
 
-The current `GridAStarRouter` is intentionally honest: it reports
+The current `GridAStarRouter` uses compact integer state arrays, but remains
+intentionally honest: it reports
 `effective_jobs=1`. Requesting more jobs produces a DRC warning instead of
 silently pretending to use multiple cores.
 
@@ -72,6 +84,20 @@ class RouterBackend(Protocol):
 ```
 
 This keeps concurrency policy out of the compiler orchestration layer.
+
+## Native-first direction
+
+Python should remain the CLI, schema, pack-loading and reporting layer. The
+router, future placement optimizer and any global solver hot loop should be
+treated as native-core candidates. Rust is the preferred first target because
+it gives predictable memory layout, safe parallelism and a clean path to Python
+bindings later. C++ remains acceptable for third-party solver integration when
+the dependency already exposes a stable C or C++ API.
+
+AI-assisted maintenance changes the tradeoff: the project should prefer clear
+high-performance data structures over intentionally slow beginner-friendly
+code in hot paths. Public interfaces and tests must stay readable even if the
+inner loops become lower-level.
 
 ## Parallel implementation rules
 

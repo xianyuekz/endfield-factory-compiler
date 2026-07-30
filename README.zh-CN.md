@@ -109,10 +109,10 @@ efc compile examples/control-core.json --out build/demo \
   --jobs 8 --seed 0 --time-limit 30
 ```
 
-当前参考 A* 后端仍然是确定性的串行实现。请求多个作业时，它会明确报告
-`1/N 实际/请求作业数`并产生 DRC 警告，不会假装已经使用多核。详细设计见
-[性能与并行架构](docs/PERFORMANCE.md)，可重复基准见
-[`compile_scaling.py`](benchmarks/compile_scaling.py)。
+当前紧凑 A* 后端仍然是确定性的串行实现。请求多个作业时，它会明确报告
+`1/N 实际/请求作业数`并产生 DRC 警告。Python 定位为 CLI 和数据编排层；
+成熟后的性能热点应迁移到原生后端。详细设计见[性能与并行架构](docs/PERFORMANCE.md)，
+可重复基准见[`compile_scaling.py`](benchmarks/compile_scaling.py)。
 
 ## 免责声明
 

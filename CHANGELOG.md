@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here.
 
+## 0.3.1
+
+- replace tuple/dictionary-heavy A* search state with compact integer-indexed
+  arrays;
+- rename the reference router telemetry to `serial-compact-grid-astar`;
+- document the native-first performance direction for future hot-path work.
+
 ## 0.3.0
 
 - add a shared `ExecutionOptions` contract for job budgets, deterministic seeds

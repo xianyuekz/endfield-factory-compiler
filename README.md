@@ -114,9 +114,10 @@ efc compile examples/control-core.json --out build/demo \
   --jobs 8 --seed 0 --time-limit 30
 ```
 
-The current reference A* backend remains deterministic and serial. When more
-than one job is requested it reports `1/N effective/requested` and emits a DRC
-warning instead of silently pretending to use multiple cores. See
+The current compact A* backend remains deterministic and serial. When more than
+one job is requested it reports `1/N effective/requested` and emits a DRC
+warning. Python is the CLI and data orchestration layer; performance-critical
+hot loops are expected to move into native backends as they mature. See
 [performance and parallelism](docs/PERFORMANCE.md) and the reproducible
 [`compile_scaling.py`](benchmarks/compile_scaling.py) benchmark.
 

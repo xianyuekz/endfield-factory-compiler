@@ -42,8 +42,10 @@ actually satisfied.
 
 - [x] Add a shared execution budget, replaceable router interface and routing
   telemetry (`v0.3.0`).
-- [ ] Replace tuple/dictionary-heavy A* state with compact integer-indexed
+- [x] Replace tuple/dictionary-heavy A* state with compact integer-indexed
   storage.
+- [ ] Move route search hot loops into a native Rust core with Python kept as
+  the CLI and data-loading layer.
 - [ ] Add deterministic multi-start process parallelism.
 - [ ] Add conflict-batched parallel routing with deterministic commit and
   negotiated-congestion repair.

@@ -3,7 +3,6 @@ from __future__ import annotations
 import heapq
 from collections import defaultdict
 from dataclasses import dataclass
-from itertools import count
 from time import perf_counter, process_time
 
 from .execution import ExecutionOptions
@@ -18,7 +17,7 @@ from .routing_backend import (
 
 @dataclass
 class _SearchResult:
-    points: list[tuple[int, int]]
+    cell_ids: list[int]
     expanded_states: int
     generated_states: int
     heap_pushes: int
@@ -26,44 +25,80 @@ class _SearchResult:
     timed_out: bool = False
 
 
-def _neighbors(
-    point: tuple[int, int], width: int, height: int
-) -> tuple[tuple[int, int], ...]:
-    x, y = point
-    return tuple(
-        candidate
-        for candidate in ((x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1))
-        if 0 <= candidate[0] < width and 0 <= candidate[1] < height
-    )
+_DIRECTIONS = ((1, 0), (0, 1), (-1, 0), (0, -1))
+_NO_DIRECTION = 4
+
+
+def _cell_id(point: tuple[int, int], width: int) -> int:
+    return point[1] * width + point[0]
+
+
+def _maybe_cell_id(
+    point: tuple[int, int],
+    width: int,
+    height: int,
+) -> int | None:
+    if 0 <= point[0] < width and 0 <= point[1] < height:
+        return _cell_id(point, width)
+    return None
+
+
+def _cell_point(cell_id: int, width: int) -> tuple[int, int]:
+    return cell_id % width, cell_id // width
+
+
+@dataclass
+class _AStarWorkspace:
+    width: int
+    height: int
+    came_from: list[int]
+    cost: list[float]
+    seen: list[int]
+    closed: list[int]
+    epoch: int = 0
+
+    @classmethod
+    def create(cls, width: int, height: int) -> _AStarWorkspace:
+        state_count = width * height * 5
+        return cls(
+            width=width,
+            height=height,
+            came_from=[-1] * state_count,
+            cost=[0.0] * state_count,
+            seen=[0] * state_count,
+            closed=[0] * state_count,
+        )
+
+    def next_epoch(self) -> int:
+        self.epoch += 1
+        return self.epoch
 
 
 def _astar(
-    start: tuple[int, int],
-    goal: tuple[int, int],
+    start: int,
+    goal: int,
     width: int,
     height: int,
-    blocked: set[tuple[int, int]],
-    route_occupancy: dict[tuple[int, int], set[str]],
+    blocked: set[int],
+    route_occupancy: dict[int, set[str]],
     item: str,
     allow_crossings: bool,
     crossing_penalty: float,
     bend_penalty: float,
     deadline: float | None,
+    workspace: _AStarWorkspace,
 ) -> _SearchResult:
     if start in blocked or goal in blocked:
         return _SearchResult([], 0, 0, 0, 0)
-    serial = count()
-    start_state = (start, None)
-    frontier: list[
-        tuple[float, int, tuple[tuple[int, int], tuple[int, int] | None]]
-    ] = [(0.0, next(serial), start_state)]
-    came_from: dict[
-        tuple[tuple[int, int], tuple[int, int] | None],
-        tuple[tuple[int, int], tuple[int, int] | None] | None,
-    ] = {start_state: None}
-    cost: dict[
-        tuple[tuple[int, int], tuple[int, int] | None], float
-    ] = {start_state: 0.0}
+
+    epoch = workspace.next_epoch()
+    start_state = start * 5 + _NO_DIRECTION
+    goal_x, goal_y = _cell_point(goal, width)
+    frontier: list[tuple[float, int, int]] = [(0.0, 0, start_state)]
+    serial = 1
+    workspace.came_from[start_state] = -1
+    workspace.cost[start_state] = 0.0
+    workspace.seen[start_state] = epoch
     expanded_states = 0
     generated_states = 1
     heap_pushes = 1
@@ -84,14 +119,18 @@ def _astar(
                 timed_out=True,
             )
         _, _, current_state = heapq.heappop(frontier)
+        if workspace.closed[current_state] == epoch:
+            continue
+        workspace.closed[current_state] = epoch
         expanded_states += 1
-        current, previous_direction = current_state
+        current = current_state // 5
+        previous_direction = current_state % 5
         if current == goal:
-            path: list[tuple[int, int]] = []
+            path: list[int] = []
             cursor = current_state
-            while cursor is not None:
-                path.append(cursor[0])
-                cursor = came_from[cursor]
+            while cursor != -1:
+                path.append(cursor // 5)
+                cursor = workspace.came_from[cursor]
             return _SearchResult(
                 list(reversed(path)),
                 expanded_states,
@@ -99,44 +138,57 @@ def _astar(
                 heap_pushes,
                 peak_frontier,
             )
-        for neighbor in _neighbors(current, width, height):
+        x, y = _cell_point(current, width)
+        for direction, (dx, dy) in enumerate(_DIRECTIONS):
+            neighbor_x = x + dx
+            neighbor_y = y + dy
+            if not (0 <= neighbor_x < width and 0 <= neighbor_y < height):
+                continue
+            neighbor = neighbor_y * width + neighbor_x
             if neighbor in blocked:
                 continue
-            direction = (neighbor[0] - current[0], neighbor[1] - current[1])
-            occupied_items = route_occupancy.get(neighbor, set())
-            different_items = occupied_items - {item}
-            if different_items and not allow_crossings:
+            occupied_items = route_occupancy.get(neighbor)
+            has_same_item = (
+                occupied_items is not None and item in occupied_items
+            )
+            has_different_items = (
+                occupied_items is not None
+                and any(occupied_item != item for occupied_item in occupied_items)
+            )
+            if has_different_items and not allow_crossings:
                 continue
 
             step_cost = 1.0
-            if item in occupied_items and not different_items:
+            if has_same_item and not has_different_items:
                 step_cost = 0.65
-            if different_items:
+            if has_different_items:
                 step_cost += crossing_penalty
             if (
-                previous_direction is not None
+                previous_direction != _NO_DIRECTION
                 and direction != previous_direction
             ):
                 step_cost += bend_penalty
 
-            neighbor_state = (neighbor, direction)
-            new_cost = cost[current_state] + step_cost
+            neighbor_state = neighbor * 5 + direction
+            new_cost = workspace.cost[current_state] + step_cost
             if (
-                neighbor_state not in cost
-                or new_cost < cost[neighbor_state]
+                workspace.seen[neighbor_state] != epoch
+                or new_cost < workspace.cost[neighbor_state]
             ):
-                cost[neighbor_state] = new_cost
+                workspace.seen[neighbor_state] = epoch
+                workspace.cost[neighbor_state] = new_cost
                 heuristic = 0.65 * (
-                    abs(goal[0] - neighbor[0]) + abs(goal[1] - neighbor[1])
+                    abs(goal_x - neighbor_x) + abs(goal_y - neighbor_y)
                 )
                 heapq.heappush(
                     frontier,
-                    (new_cost + heuristic, next(serial), neighbor_state),
+                    (new_cost + heuristic, serial, neighbor_state),
                 )
+                serial += 1
                 generated_states += 1
                 heap_pushes += 1
                 peak_frontier = max(peak_frontier, len(frontier))
-                came_from[neighbor_state] = current_state
+                workspace.came_from[neighbor_state] = current_state
     return _SearchResult(
         [],
         expanded_states,
@@ -148,17 +200,18 @@ def _astar(
 
 def _boundary_port(
     preferred_y: int,
-    pack: RegionPack,
-    blocked: set[tuple[int, int]],
-) -> tuple[int, int] | None:
+    width: int,
+    height: int,
+    blocked: set[int],
+) -> int | None:
     candidates = sorted(
-        range(pack.grid.height),
+        range(height),
         key=lambda y: (abs(y - preferred_y), y),
     )
     for y in candidates:
-        point = (0, y)
-        if point not in blocked:
-            return point
+        cell_id = y * width
+        if cell_id not in blocked:
+            return cell_id
     return None
 
 
@@ -182,10 +235,21 @@ def _route_serial(
         deterministic=True,
         seed=options.seed,
     )
-    device_cells = set().union(*(device.rect.cells() for device in devices))
-    obstacle_cells = set().union(*(rect.cells() for rect in pack.grid.obstacles))
+    width = pack.grid.width
+    height = pack.grid.height
+    astar_workspace = _AStarWorkspace.create(width, height)
+    device_cells = {
+        _cell_id(cell, width)
+        for device in devices
+        for cell in device.rect.cells()
+    }
+    obstacle_cells = {
+        _cell_id(cell, width)
+        for rect in pack.grid.obstacles
+        for cell in rect.cells()
+    }
     hard_blocked = device_cells | obstacle_cells
-    route_occupancy: dict[tuple[int, int], set[str]] = defaultdict(set)
+    route_occupancy: dict[int, set[str]] = defaultdict(set)
     producers: dict[str, list[PlacedDevice]] = defaultdict(list)
     consumers_by_recipe: dict[str, list[PlacedDevice]] = defaultdict(list)
     producer_remaining: dict[str, float] = {}
@@ -204,7 +268,8 @@ def _route_serial(
         consumers = consumers_by_recipe[node.recipe_id]
         for consumer in consumers:
             for item, total_input_rate in node.input_rates.items():
-                sink = consumer.input_port(item)
+                sink_point = consumer.input_port(item)
+                sink = _maybe_cell_id(sink_point, width, height)
                 required_rate = total_input_rate / len(consumers)
                 item_producers = producers.get(item, [])
                 allocations: list[
@@ -252,24 +317,34 @@ def _route_serial(
                             if occupied_items - {item}
                         }
                     if source_device is not None:
-                        source = source_device.output_port()
+                        source_point = source_device.output_port()
+                        source = _maybe_cell_id(
+                            source_point,
+                            width,
+                            height,
+                        )
                     elif source_name.startswith("external:"):
                         boundary = _boundary_port(
-                            sink[1], pack, route_blocked
+                            sink_point[1],
+                            width,
+                            height,
+                            route_blocked,
                         )
-                        source = boundary if boundary is not None else (-1, -1)
+                        source = boundary
                     else:
-                        source = (-1, -1)
+                        source = None
 
                     blocked = set(route_blocked)
-                    blocked.discard(source)
-                    blocked.discard(sink)
+                    if source is not None:
+                        blocked.discard(source)
+                    if sink is not None:
+                        blocked.discard(sink)
                     search_result = (
                         _astar(
                             source,
                             sink,
-                            pack.grid.width,
-                            pack.grid.height,
+                            width,
+                            height,
                             blocked,
                             route_occupancy,
                             item,
@@ -277,11 +352,12 @@ def _route_serial(
                             pack.logistics.crossing_penalty,
                             pack.logistics.bend_penalty,
                             deadline,
+                            astar_workspace,
                         )
-                        if source[0] >= 0
+                        if source is not None and sink is not None
                         else _SearchResult([], 0, 0, 0, 0)
                     )
-                    if source[0] >= 0:
+                    if source is not None and sink is not None:
                         stats.astar_calls += 1
                     stats.expanded_states += search_result.expanded_states
                     stats.generated_states += search_result.generated_states
@@ -293,10 +369,13 @@ def _route_serial(
                     stats.timed_out = (
                         stats.timed_out or search_result.timed_out
                     )
-                    points = search_result.points
-                    if points:
-                        for point in points:
-                            route_occupancy[point].add(item)
+                    if search_result.cell_ids:
+                        for cell_id in search_result.cell_ids:
+                            route_occupancy[cell_id].add(item)
+                    points = [
+                        _cell_point(cell_id, width)
+                        for cell_id in search_result.cell_ids
+                    ]
                     routes.append(
                         Route(
                             id=f"route-{route_number}",
@@ -325,7 +404,7 @@ def _route_serial(
 class GridAStarRouter:
     """Deterministic serial reference backend for grid-based routing."""
 
-    name = "serial-grid-astar"
+    name = "serial-compact-grid-astar"
 
     def route(
         self,
