@@ -1,8 +1,11 @@
+from collections import defaultdict
 import unittest
 from dataclasses import replace
 from pathlib import Path
 
 from endfield_factory_compiler.compiler import compile_project
+from endfield_factory_compiler.drc import run_drc
+from endfield_factory_compiler.metrics import calculate_metrics
 from endfield_factory_compiler.model import ProjectConstraints
 from endfield_factory_compiler.pack import load_project, load_region_pack
 from endfield_factory_compiler.render import render_svg
@@ -77,6 +80,68 @@ class CompilationTests(unittest.TestCase):
                 "PROJECT_DEVICE_CONSTRAINT_EXCEEDED",
                 "PROJECT_ROUTE_CONSTRAINT_EXCEEDED",
             },
+        )
+
+    def test_physical_flow_respects_each_machine_capacity(self):
+        project = load_project(PROJECT)
+        pack = load_region_pack(project.region_pack_path)
+        result = compile_project(project, pack)
+        devices = {device.id: device for device in result.layout.devices}
+
+        outgoing_rates = defaultdict(float)
+        for route in result.layout.routes:
+            if route.source in devices:
+                outgoing_rates[route.source] += route.required_rate
+
+        for device_id, assigned_rate in outgoing_rates.items():
+            device = devices[device_id]
+            capacity = pack.recipes[
+                device.recipe_id
+            ].output_rate_per_minute
+            self.assertLessEqual(
+                assigned_rate,
+                capacity + 1e-9,
+                f"{device_id} is assigned more output than it can produce",
+            )
+
+        incoming_rates = defaultdict(float)
+        for route in result.layout.routes:
+            incoming_rates[(route.sink, route.item)] += route.required_rate
+        consumers_by_recipe = defaultdict(list)
+        for device in result.layout.devices:
+            consumers_by_recipe[device.recipe_id].append(device)
+        for node in result.synthesis.nodes:
+            consumers = consumers_by_recipe[node.recipe_id]
+            for consumer in consumers:
+                for item, total_rate in node.input_rates.items():
+                    expected = total_rate / len(consumers)
+                    self.assertAlmostEqual(
+                        incoming_rates[(consumer.id, item)],
+                        expected,
+                        msg=f"{consumer.id} does not receive enough {item}",
+                    )
+
+    def test_drc_rejects_an_overloaded_producer(self):
+        project = load_project(PROJECT)
+        pack = load_region_pack(project.region_pack_path)
+        result = compile_project(project, pack)
+        internal_route = next(
+            route
+            for route in result.layout.routes
+            if not route.source.startswith(("external:", "unallocated:"))
+        )
+        internal_route.required_rate += 100
+        metrics = calculate_metrics(pack, result.synthesis, result.layout)
+        diagnostics = run_drc(
+            project,
+            pack,
+            result.synthesis,
+            result.layout,
+            metrics,
+        )
+        self.assertIn(
+            "PRODUCER_CAPACITY_EXCEEDED",
+            {diagnostic.code for diagnostic in diagnostics},
         )
 
 

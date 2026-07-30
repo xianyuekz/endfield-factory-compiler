@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here.
 
+## 0.2.1
+
+- split consumer demand across multiple producer devices without overloading
+  any individual machine;
+- add device-level producer capacity and consumer input-rate DRC;
+- add regression tests for physical flow conservation.
+
 ## 0.2.0
 
 - add project-level power, device-count and route-tile constraints;

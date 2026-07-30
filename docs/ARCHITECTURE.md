@@ -32,7 +32,8 @@ project.json             region.json
 - `pack.py` parses and validates project and region-pack inputs.
 - `synthesis.py` expands target rates into a DAG and maps recipes to devices.
 - `placement.py` performs deterministic, obstacle-aware column placement.
-- `routing.py` connects device ports using grid-based A*.
+- `routing.py` splits flow across producer capacity, then connects device ports
+  using grid-based A*.
 - `metrics.py` measures physical area, route length, bends and crossings.
 - `drc.py` checks physical and throughput constraints.
 - `render.py` produces a standalone SVG report.

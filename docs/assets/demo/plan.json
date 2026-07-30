@@ -508,30 +508,42 @@
       {
         "id": "route-7",
         "item": "copper_wire",
-        "source": "make_copper_wire-2",
+        "source": "make_copper_wire-1",
         "sink": "make_circuit-2",
-        "required_rate": 10.666666666666666,
+        "required_rate": 9.333333333333334,
         "capacity": 60.0,
         "points": [
           [
             7,
-            8
+            3
           ],
           [
             8,
-            8
+            3
           ],
           [
             9,
-            8
+            3
           ],
           [
             10,
-            8
+            3
           ],
           [
-            11,
-            8
+            10,
+            4
+          ],
+          [
+            10,
+            5
+          ],
+          [
+            10,
+            6
+          ],
+          [
+            10,
+            7
           ],
           [
             11,
@@ -541,6 +553,40 @@
       },
       {
         "id": "route-8",
+        "item": "copper_wire",
+        "source": "make_copper_wire-2",
+        "sink": "make_circuit-2",
+        "required_rate": 1.3333333333333321,
+        "capacity": 60.0,
+        "points": [
+          [
+            7,
+            8
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            8,
+            7
+          ],
+          [
+            9,
+            7
+          ],
+          [
+            10,
+            7
+          ],
+          [
+            11,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-9",
         "item": "quartz",
         "source": "external:quartz",
         "sink": "make_circuit-2",
@@ -614,120 +660,44 @@
         ]
       },
       {
-        "id": "route-9",
+        "id": "route-10",
         "item": "copper_wire",
-        "source": "make_copper_wire-1",
+        "source": "make_copper_wire-2",
         "sink": "make_circuit-3",
         "required_rate": 10.666666666666666,
         "capacity": 60.0,
         "points": [
           [
             7,
-            3
-          ],
-          [
-            8,
-            3
-          ],
-          [
-            9,
-            3
-          ],
-          [
-            10,
-            3
-          ],
-          [
-            10,
-            2
-          ],
-          [
-            10,
-            1
-          ],
-          [
-            11,
-            1
-          ],
-          [
-            12,
-            1
-          ],
-          [
-            13,
-            1
-          ],
-          [
-            14,
-            1
-          ],
-          [
-            15,
-            1
-          ],
-          [
-            16,
-            1
-          ],
-          [
-            16,
-            2
-          ],
-          [
-            16,
-            3
-          ],
-          [
-            16,
-            4
-          ],
-          [
-            16,
-            5
-          ],
-          [
-            16,
-            6
-          ],
-          [
-            16,
-            7
-          ],
-          [
-            16,
             8
           ],
           [
-            16,
+            7,
             9
           ],
           [
-            16,
+            7,
             10
           ],
           [
-            16,
+            7,
             11
           ],
           [
-            15,
-            11
+            7,
+            12
           ],
           [
-            14,
-            11
+            8,
+            12
           ],
           [
-            13,
-            11
+            9,
+            12
           ],
           [
-            12,
-            11
-          ],
-          [
-            11,
-            11
+            10,
+            12
           ],
           [
             11,
@@ -736,7 +706,7 @@
         ]
       },
       {
-        "id": "route-10",
+        "id": "route-11",
         "item": "quartz",
         "source": "external:quartz",
         "sink": "make_circuit-3",
@@ -810,7 +780,7 @@
         ]
       },
       {
-        "id": "route-11",
+        "id": "route-12",
         "item": "iron_powder",
         "source": "make_iron_powder-1",
         "sink": "make_frame-1",
@@ -860,32 +830,52 @@
         ]
       },
       {
-        "id": "route-12",
+        "id": "route-13",
         "item": "iron_powder",
-        "source": "make_iron_powder-2",
+        "source": "make_iron_powder-1",
         "sink": "make_frame-2",
         "required_rate": 12.0,
         "capacity": 60.0,
         "points": [
           [
             6,
-            18
+            13
+          ],
+          [
+            6,
+            14
+          ],
+          [
+            6,
+            15
+          ],
+          [
+            6,
+            16
+          ],
+          [
+            6,
+            17
           ],
           [
             7,
-            18
+            17
           ],
           [
             8,
-            18
+            17
           ],
           [
             9,
-            18
+            17
           ],
           [
             10,
-            18
+            17
+          ],
+          [
+            11,
+            17
           ],
           [
             11,
@@ -910,11 +900,11 @@
         ]
       },
       {
-        "id": "route-13",
+        "id": "route-14",
         "item": "iron_powder",
         "source": "make_iron_powder-1",
         "sink": "make_frame-3",
-        "required_rate": 12.0,
+        "required_rate": 6.0,
         "capacity": 60.0,
         "points": [
           [
@@ -937,6 +927,76 @@
             6,
             17
           ],
+          [
+            7,
+            17
+          ],
+          [
+            8,
+            17
+          ],
+          [
+            9,
+            17
+          ],
+          [
+            10,
+            17
+          ],
+          [
+            11,
+            17
+          ],
+          [
+            11,
+            18
+          ],
+          [
+            11,
+            19
+          ],
+          [
+            11,
+            20
+          ],
+          [
+            11,
+            21
+          ],
+          [
+            11,
+            22
+          ],
+          [
+            11,
+            23
+          ],
+          [
+            11,
+            24
+          ],
+          [
+            11,
+            25
+          ],
+          [
+            11,
+            26
+          ],
+          [
+            11,
+            27
+          ]
+        ]
+      },
+      {
+        "id": "route-15",
+        "item": "iron_powder",
+        "source": "make_iron_powder-2",
+        "sink": "make_frame-3",
+        "required_rate": 6.0,
+        "capacity": 60.0,
+        "points": [
           [
             6,
             18
@@ -1000,7 +1060,7 @@
         ]
       },
       {
-        "id": "route-14",
+        "id": "route-16",
         "item": "iron_powder",
         "source": "make_iron_powder-2",
         "sink": "make_frame-4",
@@ -1126,11 +1186,11 @@
         ]
       },
       {
-        "id": "route-15",
+        "id": "route-17",
         "item": "frame",
         "source": "make_frame-1",
         "sink": "make_control_core-1",
-        "required_rate": 8.0,
+        "required_rate": 5.0,
         "capacity": 60.0,
         "points": [
           [
@@ -1248,11 +1308,153 @@
         ]
       },
       {
-        "id": "route-16",
+        "id": "route-18",
+        "item": "frame",
+        "source": "make_frame-2",
+        "sink": "make_control_core-1",
+        "required_rate": 3.0,
+        "capacity": 60.0,
+        "points": [
+          [
+            16,
+            23
+          ],
+          [
+            16,
+            22
+          ],
+          [
+            16,
+            21
+          ],
+          [
+            16,
+            20
+          ],
+          [
+            16,
+            19
+          ],
+          [
+            16,
+            18
+          ],
+          [
+            17,
+            18
+          ],
+          [
+            18,
+            18
+          ],
+          [
+            19,
+            18
+          ],
+          [
+            20,
+            18
+          ],
+          [
+            21,
+            18
+          ],
+          [
+            22,
+            18
+          ],
+          [
+            23,
+            18
+          ],
+          [
+            24,
+            18
+          ],
+          [
+            25,
+            18
+          ],
+          [
+            26,
+            18
+          ],
+          [
+            26,
+            17
+          ],
+          [
+            26,
+            16
+          ],
+          [
+            26,
+            15
+          ],
+          [
+            26,
+            14
+          ],
+          [
+            26,
+            13
+          ],
+          [
+            26,
+            12
+          ],
+          [
+            26,
+            11
+          ],
+          [
+            26,
+            10
+          ],
+          [
+            26,
+            9
+          ],
+          [
+            26,
+            8
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            26,
+            6
+          ],
+          [
+            26,
+            5
+          ],
+          [
+            26,
+            4
+          ],
+          [
+            26,
+            3
+          ],
+          [
+            26,
+            2
+          ],
+          [
+            27,
+            2
+          ]
+        ]
+      },
+      {
+        "id": "route-19",
         "item": "circuit",
         "source": "make_circuit-1",
         "sink": "make_control_core-1",
-        "required_rate": 8.0,
+        "required_rate": 6.0,
         "capacity": 60.0,
         "points": [
           [
@@ -1260,12 +1462,12 @@
             3
           ],
           [
-            17,
-            3
+            16,
+            2
           ],
           [
-            17,
-            2
+            16,
+            1
           ],
           [
             17,
@@ -1322,11 +1524,105 @@
         ]
       },
       {
-        "id": "route-17",
+        "id": "route-20",
+        "item": "circuit",
+        "source": "make_circuit-2",
+        "sink": "make_control_core-1",
+        "required_rate": 2.0,
+        "capacity": 60.0,
+        "points": [
+          [
+            16,
+            8
+          ],
+          [
+            16,
+            7
+          ],
+          [
+            16,
+            6
+          ],
+          [
+            16,
+            5
+          ],
+          [
+            16,
+            4
+          ],
+          [
+            16,
+            3
+          ],
+          [
+            16,
+            2
+          ],
+          [
+            16,
+            1
+          ],
+          [
+            17,
+            1
+          ],
+          [
+            18,
+            1
+          ],
+          [
+            19,
+            1
+          ],
+          [
+            20,
+            1
+          ],
+          [
+            21,
+            1
+          ],
+          [
+            22,
+            1
+          ],
+          [
+            23,
+            1
+          ],
+          [
+            24,
+            1
+          ],
+          [
+            25,
+            1
+          ],
+          [
+            26,
+            1
+          ],
+          [
+            27,
+            1
+          ],
+          [
+            27,
+            2
+          ],
+          [
+            27,
+            3
+          ]
+        ]
+      },
+      {
+        "id": "route-21",
         "item": "frame",
         "source": "make_frame-2",
         "sink": "make_control_core-2",
-        "required_rate": 8.0,
+        "required_rate": 2.0,
         "capacity": 60.0,
         "points": [
           [
@@ -1444,13 +1740,279 @@
         ]
       },
       {
-        "id": "route-18",
+        "id": "route-22",
+        "item": "frame",
+        "source": "make_frame-3",
+        "sink": "make_control_core-2",
+        "required_rate": 5.0,
+        "capacity": 60.0,
+        "points": [
+          [
+            16,
+            28
+          ],
+          [
+            16,
+            27
+          ],
+          [
+            16,
+            26
+          ],
+          [
+            16,
+            25
+          ],
+          [
+            16,
+            24
+          ],
+          [
+            16,
+            23
+          ],
+          [
+            16,
+            22
+          ],
+          [
+            16,
+            21
+          ],
+          [
+            16,
+            20
+          ],
+          [
+            16,
+            19
+          ],
+          [
+            16,
+            18
+          ],
+          [
+            17,
+            18
+          ],
+          [
+            18,
+            18
+          ],
+          [
+            19,
+            18
+          ],
+          [
+            20,
+            18
+          ],
+          [
+            21,
+            18
+          ],
+          [
+            22,
+            18
+          ],
+          [
+            23,
+            18
+          ],
+          [
+            24,
+            18
+          ],
+          [
+            25,
+            18
+          ],
+          [
+            26,
+            18
+          ],
+          [
+            26,
+            17
+          ],
+          [
+            26,
+            16
+          ],
+          [
+            26,
+            15
+          ],
+          [
+            26,
+            14
+          ],
+          [
+            26,
+            13
+          ],
+          [
+            26,
+            12
+          ],
+          [
+            26,
+            11
+          ],
+          [
+            26,
+            10
+          ],
+          [
+            26,
+            9
+          ],
+          [
+            26,
+            8
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            27,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-23",
+        "item": "frame",
+        "source": "make_frame-4",
+        "sink": "make_control_core-2",
+        "required_rate": 1.0,
+        "capacity": 60.0,
+        "points": [
+          [
+            23,
+            3
+          ],
+          [
+            24,
+            3
+          ],
+          [
+            25,
+            3
+          ],
+          [
+            26,
+            3
+          ],
+          [
+            26,
+            4
+          ],
+          [
+            26,
+            5
+          ],
+          [
+            26,
+            6
+          ],
+          [
+            26,
+            7
+          ],
+          [
+            27,
+            7
+          ]
+        ]
+      },
+      {
+        "id": "route-24",
         "item": "circuit",
         "source": "make_circuit-2",
         "sink": "make_control_core-2",
-        "required_rate": 8.0,
+        "required_rate": 4.0,
         "capacity": 60.0,
         "points": [
+          [
+            16,
+            8
+          ],
+          [
+            17,
+            8
+          ],
+          [
+            18,
+            8
+          ],
+          [
+            19,
+            8
+          ],
+          [
+            20,
+            8
+          ],
+          [
+            21,
+            8
+          ],
+          [
+            22,
+            8
+          ],
+          [
+            23,
+            8
+          ],
+          [
+            24,
+            8
+          ],
+          [
+            25,
+            8
+          ],
+          [
+            26,
+            8
+          ],
+          [
+            27,
+            8
+          ]
+        ]
+      },
+      {
+        "id": "route-25",
+        "item": "circuit",
+        "source": "make_circuit-3",
+        "sink": "make_control_core-2",
+        "required_rate": 4.0,
+        "capacity": 60.0,
+        "points": [
+          [
+            16,
+            13
+          ],
+          [
+            16,
+            12
+          ],
+          [
+            16,
+            11
+          ],
+          [
+            16,
+            10
+          ],
+          [
+            16,
+            9
+          ],
           [
             16,
             8
@@ -1506,14 +2068,14 @@
   "metrics": {
     "device_count": 13,
     "device_tiles": 156,
-    "route_count": 18,
-    "route_tiles": 197,
-    "total_route_length": 235,
-    "route_bends": 28,
-    "crossing_tiles": 8,
+    "route_count": 25,
+    "route_tiles": 202,
+    "total_route_length": 351,
+    "route_bends": 38,
+    "crossing_tiles": 7,
     "buildable_tiles": 2144,
-    "used_tiles": 353,
-    "area_utilization_percent": 16.46455223880597,
+    "used_tiles": 358,
+    "area_utilization_percent": 16.69776119402985,
     "power_utilization_percent": 50.666666666666664,
     "raw_input_rate_per_minute": 80.0
   },
@@ -1526,7 +2088,7 @@
     {
       "severity": "info",
       "code": "ROUTE_CROSSINGS",
-      "message": "8 logistics crossing(s) use the region's abstract bridge capability."
+      "message": "7 logistics crossing(s) use the region's abstract bridge capability."
     },
     {
       "severity": "info",

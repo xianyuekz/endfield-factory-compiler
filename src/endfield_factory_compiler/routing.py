@@ -120,9 +120,13 @@ def route_logistics(
     route_occupancy: dict[tuple[int, int], set[str]] = defaultdict(set)
     producers: dict[str, list[PlacedDevice]] = defaultdict(list)
     consumers_by_recipe: dict[str, list[PlacedDevice]] = defaultdict(list)
+    producer_remaining: dict[str, float] = {}
     for device in devices:
         producers[device.output_item].append(device)
         consumers_by_recipe[device.recipe_id].append(device)
+        producer_remaining[device.id] = pack.recipes[
+            device.recipe_id
+        ].output_rate_per_minute
 
     routes: list[Route] = []
     producer_cursor: dict[str, int] = defaultdict(int)
@@ -135,14 +139,43 @@ def route_logistics(
                 sink = consumer.input_port(item)
                 required_rate = total_input_rate / len(consumers)
                 item_producers = producers.get(item, [])
-                if item_producers:
-                    source_device = item_producers[
-                        producer_cursor[item] % len(item_producers)
-                    ]
-                    producer_cursor[item] += 1
-                    source = source_device.output_port()
-                    source_name = source_device.id
+                allocations: list[
+                    tuple[PlacedDevice | None, str, float]
+                ] = []
+                if not item_producers:
+                    allocations.append((None, f"external:{item}", required_rate))
                 else:
+                    remaining_demand = required_rate
+                    while remaining_demand > 1e-9:
+                        while (
+                            producer_cursor[item] < len(item_producers)
+                            and producer_remaining[
+                                item_producers[producer_cursor[item]].id
+                            ]
+                            <= 1e-9
+                        ):
+                            producer_cursor[item] += 1
+                        if producer_cursor[item] >= len(item_producers):
+                            allocations.append(
+                                (
+                                    None,
+                                    f"unallocated:{item}",
+                                    remaining_demand,
+                                )
+                            )
+                            break
+                        source_device = item_producers[producer_cursor[item]]
+                        allocation = min(
+                            remaining_demand,
+                            producer_remaining[source_device.id],
+                        )
+                        allocations.append(
+                            (source_device, source_device.id, allocation)
+                        )
+                        producer_remaining[source_device.id] -= allocation
+                        remaining_demand -= allocation
+
+                for source_device, source_name, allocated_rate in allocations:
                     route_blocked = set(hard_blocked)
                     if not pack.logistics.allow_crossings:
                         route_blocked |= {
@@ -150,51 +183,48 @@ def route_logistics(
                             for point, occupied_items in route_occupancy.items()
                             if occupied_items - {item}
                         }
-                    boundary = _boundary_port(sink[1], pack, route_blocked)
-                    if boundary is None:
-                        source = (-1, -1)
+                    if source_device is not None:
+                        source = source_device.output_port()
+                    elif source_name.startswith("external:"):
+                        boundary = _boundary_port(
+                            sink[1], pack, route_blocked
+                        )
+                        source = boundary if boundary is not None else (-1, -1)
                     else:
-                        source = boundary
-                    source_name = f"external:{item}"
+                        source = (-1, -1)
 
-                blocked = set(hard_blocked)
-                if not pack.logistics.allow_crossings:
-                    blocked |= {
-                        point
-                        for point, occupied_items in route_occupancy.items()
-                        if occupied_items - {item}
-                    }
-                blocked.discard(source)
-                blocked.discard(sink)
-                points = (
-                    _astar(
-                        source,
-                        sink,
-                        pack.grid.width,
-                        pack.grid.height,
-                        blocked,
-                        route_occupancy,
-                        item,
-                        pack.logistics.allow_crossings,
-                        pack.logistics.crossing_penalty,
-                        pack.logistics.bend_penalty,
+                    blocked = set(route_blocked)
+                    blocked.discard(source)
+                    blocked.discard(sink)
+                    points = (
+                        _astar(
+                            source,
+                            sink,
+                            pack.grid.width,
+                            pack.grid.height,
+                            blocked,
+                            route_occupancy,
+                            item,
+                            pack.logistics.allow_crossings,
+                            pack.logistics.crossing_penalty,
+                            pack.logistics.bend_penalty,
+                        )
+                        if source[0] >= 0
+                        else []
                     )
-                    if source[0] >= 0
-                    else []
-                )
-                if points:
-                    for point in points:
-                        route_occupancy[point].add(item)
-                routes.append(
-                    Route(
-                        id=f"route-{route_number}",
-                        item=item,
-                        source=source_name,
-                        sink=consumer.id,
-                        required_rate=required_rate,
-                        capacity=pack.logistics.tile_capacity_per_minute,
-                        points=points,
+                    if points:
+                        for point in points:
+                            route_occupancy[point].add(item)
+                    routes.append(
+                        Route(
+                            id=f"route-{route_number}",
+                            item=item,
+                            source=source_name,
+                            sink=consumer.id,
+                            required_rate=allocated_rate,
+                            capacity=pack.logistics.tile_capacity_per_minute,
+                            points=points,
+                        )
                     )
-                )
-                route_number += 1
+                    route_number += 1
     return routes

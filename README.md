@@ -24,7 +24,7 @@ production targets
   -> SVG + JSON + Markdown report
 ```
 
-The demo compiles a target of 8 control cores per minute into 13 devices and 18
+The demo compiles a target of 8 control cores per minute into 13 devices and 25
 routes with a clean DRC report. It uses fictional data so that the repository
 does not redistribute game assets or claim that unverified values are
 authoritative.
@@ -76,7 +76,8 @@ Implemented:
 - data-driven devices, recipes, grid obstacles and logistics capabilities
 - deterministic column placement with obstacle avoidance
 - congestion-aware A* routing with crossing and bend costs
-- DRC for bounds, overlap, power, route capacity and connectivity
+- capacity-aware many-to-many flow allocation between physical devices
+- DRC for bounds, overlap, power, per-device flow, route capacity and connectivity
 - project-level power, device-count and route-tile constraints
 - physical metrics for footprint, utilization, route length, bends and crossings
 - JSON Schema files for editor validation and autocomplete
@@ -101,6 +102,7 @@ guaranteed, and new maintainers are explicitly welcome.
 Read [the architecture](docs/ARCHITECTURE.md) and
 [contribution guide](CONTRIBUTING.md) before starting a larger change.
 Release changes are recorded in the [changelog](CHANGELOG.md).
+Known correctness gaps are ordered in the [roadmap](docs/ROADMAP.md).
 
 ## Disclaimer
 

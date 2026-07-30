@@ -6,6 +6,7 @@ from .model import (
     CompilationMetrics,
     Diagnostic,
     LayoutResult,
+    PlacedDevice,
     Project,
     RegionPack,
     SynthesisResult,
@@ -87,6 +88,7 @@ def run_drc(
             )
         )
 
+    devices_by_id = {device.id: device for device in layout.devices}
     occupied: dict[tuple[int, int], str] = {}
     obstacle_cells = set().union(*(rect.cells() for rect in pack.grid.obstacles))
     for device in layout.devices:
@@ -124,7 +126,12 @@ def run_drc(
             occupied[cell] = device.id
 
     route_cells: dict[tuple[int, int], set[str]] = defaultdict(set)
+    outgoing_rates: dict[str, float] = defaultdict(float)
+    incoming_rates: dict[tuple[str, str], float] = defaultdict(float)
     for route in layout.routes:
+        incoming_rates[(route.sink, route.item)] += route.required_rate
+        if route.source in devices_by_id:
+            outgoing_rates[route.source] += route.required_rate
         if not route.routed:
             diagnostics.append(
                 Diagnostic(
@@ -153,6 +160,38 @@ def run_drc(
                     )
                 )
             route_cells[point].add(route.item)
+
+    for device_id, assigned_rate in outgoing_rates.items():
+        device = devices_by_id[device_id]
+        capacity = pack.recipes[device.recipe_id].output_rate_per_minute
+        if assigned_rate > capacity + 1e-9:
+            diagnostics.append(
+                Diagnostic(
+                    "error",
+                    "PRODUCER_CAPACITY_EXCEEDED",
+                    f"{device_id} is assigned {assigned_rate:.2f}/min but can "
+                    f"produce only {capacity:.2f}/min.",
+                )
+            )
+
+    consumers_by_recipe: dict[str, list[PlacedDevice]] = defaultdict(list)
+    for device in layout.devices:
+        consumers_by_recipe[device.recipe_id].append(device)
+    for node in synthesis.nodes:
+        consumers = consumers_by_recipe[node.recipe_id]
+        for consumer in consumers:
+            for item, total_rate in node.input_rates.items():
+                expected_rate = total_rate / len(consumers)
+                actual_rate = incoming_rates[(consumer.id, item)]
+                if abs(actual_rate - expected_rate) > 1e-9:
+                    diagnostics.append(
+                        Diagnostic(
+                            "error",
+                            "CONSUMER_INPUT_RATE_MISMATCH",
+                            f"{consumer.id} receives {actual_rate:.2f}/min of "
+                            f"{item} but needs {expected_rate:.2f}/min.",
+                        )
+                    )
 
     crossing_count = 0
     for point, items in route_cells.items():

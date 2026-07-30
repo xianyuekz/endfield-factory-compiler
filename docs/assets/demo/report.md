@@ -10,12 +10,12 @@
 | Region pack | `demo-valley` 0.2.0 |
 | Devices | 13 |
 | Device footprint | 156 tiles |
-| Logistics routes | 18 |
-| Unique route tiles | 197 |
-| Total routed length | 235 tiles |
-| Route bends | 28 |
-| Crossing tiles | 8 |
-| Area utilization | 16.5% |
+| Logistics routes | 25 |
+| Unique route tiles | 202 |
+| Total routed length | 351 tiles |
+| Route bends | 38 |
+| Crossing tiles | 7 |
+| Area utilization | 16.7% |
 | Power | 304 / 600 |
 
 ## Targets
@@ -48,10 +48,10 @@
 | --- | ---: | ---: |
 | Power | 400 | 304 |
 | Devices | 16 | 13 |
-| Route tiles | 240 | 197 |
+| Route tiles | 240 | 202 |
 
 ## Diagnostics
 
 - [INFO] `POWER_BUDGET_OK` - Power usage is 304.0 / 600.0.
-- [INFO] `ROUTE_CROSSINGS` - 8 logistics crossing(s) use the region's abstract bridge capability.
+- [INFO] `ROUTE_CROSSINGS` - 7 logistics crossing(s) use the region's abstract bridge capability.
 - [INFO] `DRC_SUMMARY` - DRC completed with 0 error(s) and 0 warning(s).
